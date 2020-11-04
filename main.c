@@ -103,18 +103,20 @@ void probar_insertar_distintos_tipos_de_datos(){
 void probar_insertar_en_posicion_invalida(){
     int dato = 1;
     int dato2 = 2;
-    int dato3 = 3;
     int elemento_insertar_posicion = 45;
+    int elemento_insertar_posicion_2 = 56;
 
     lista_t* lista = lista_crear();
 
     lista_insertar(lista, &dato);
     lista_insertar(lista, &dato2);
-    lista_insertar(lista, &dato3);
-    lista_insertar_en_posicion(lista, &elemento_insertar_posicion, 5); //La lista tiene cantidad 3. osea 3 elementos, si pongo posicion 5, deberia ponerlo al final.
+    lista_insertar_en_posicion(lista, &elemento_insertar_posicion, 5); //La lista tiene cantidad 2. osea 2 elementos, si pongo posicion 5, deberia ponerlo al final.
+    lista_insertar_en_posicion(lista, &elemento_insertar_posicion_2, 23);
 
+    //printf("%i\n", *(int*)lista->nodo_inicio->siguiente->siguiente->elemento);
 
-    pa2m_afirmar(*(int*)(lista->nodo_fin->elemento) == 45, "Insertar en posicion invalida funciona. Lo pone al final :)");
+    pa2m_afirmar(*(int*)(lista->nodo_inicio->siguiente->siguiente->elemento) == 45, "Insertar 1º elemento en posicion invalida. Lo pone al final? :)");
+    pa2m_afirmar(*(int*)(lista->nodo_fin->elemento) == 56, "Insertar 2º elemento en posicion invalida. Lo pone al final? :)");
     // La lista queda asi: [1, 2, 3, 45]
 
     free(lista->nodo_fin);
