@@ -246,15 +246,19 @@ void probar_se_inserta_correctamente(){
     lista_insertar(lista, &dato2);
 
     lista_insertar_en_posicion(lista, &elemento_insertar_posicion, 0); //Inserto al inicio.
-    pa2m_afirmar(*(char*)(lista->nodo_inicio->elemento) == 'X', "Valor correcto. (Insertar al inicio (posicion 0))");
     lista_insertar_en_posicion(lista, &elemento_insertar_posicion_2, 1); //Inserto en la posicion 1.
-    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->elemento) == 'Y', "Valor correcto. (Insertar en posicion 1 funciona.)");
     lista_insertar_en_posicion(lista, &elemento_insertar_posicion_3, 5); //Inserto al final de forma correcta. La lista tiene 4 elementos. Paso la posicion 5.
-    pa2m_afirmar(*(char*)(lista->nodo_fin->elemento) == 'Z', "Valor correcto. (Inserto al final de forma correcta).");
     lista_insertar_en_posicion(lista, &elemento_insertar_posicion_4, 700); //Insertar elemento al final por posicion invalida (posicion supera cantidad).
-    pa2m_afirmar(*(char*)(lista->nodo_fin->elemento) == 'J', "Valor correcto. (Insertar elemento al final por posicion invalida (posicion supera cantidad)).");
     lista_insertar_en_posicion(lista, &elemento_insertar_posicion_5, 3); //Inserto en la posicion 3.
-    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->siguiente->siguiente->elemento) == 'K', "Valor correcto. (Insertar en posicion 3 funciona.)");
+
+    pa2m_afirmar(*(char*)(lista->nodo_inicio->elemento) == 'X', "1º valor correcto. Elemento ubicado correctamente.");
+    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->elemento) == 'Y', "2º valor correcto. Elemento ubicado correctamente.");
+    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->siguiente->elemento) == 'A', "3º valor correcto. Elemento ubicado correctamente.");
+    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->siguiente->siguiente->elemento) == 'K', "4º valor correcto. Elemento ubicado correctamente.");
+    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente->elemento) == 'B', "5º valor correcto. Elemento ubicado correctamente.");
+    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente->siguiente->elemento) == 'Z', "6º valor correcto. Elemento ubicado correctamente.");
+    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente->siguiente->siguiente->elemento) == 'J', "7º valor correcto. Elemento ubicado correctamente.");
+
 
     free(lista->nodo_fin);
     free(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente->siguiente);
