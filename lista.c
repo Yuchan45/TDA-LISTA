@@ -69,20 +69,22 @@ int lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
         size_t indice = 0;
         nodo_t* nodo = lista->nodo_inicio;
 
-        if(posicion == 0){
+        if(posicion == 0){ // Caso el nodo a agregar es en la primer posicion.
             nodo_nuevo->siguiente = lista->nodo_inicio;
             lista->nodo_inicio = nodo_nuevo;
+            //lista->nodo_fin = nodo_nuevo;
             (lista->cantidad)++;
             return 0;
         }
-        if(posicion == lista->cantidad){
+        
+        if(posicion == lista->cantidad){ // Caso nodo a agregar es en la ultima posicion.
             lista->nodo_fin->siguiente = nodo_nuevo;
             lista->nodo_fin = nodo_nuevo;
             (lista->cantidad)++;
             return 0;
         }
-
-        while(nodo != NULL){
+        
+        while(nodo != NULL){ // Caso que el nodo a agregar es uno de los del medio.
             if ((indice + 1) == posicion){
                 nodo_nuevo->siguiente = nodo->siguiente;
                 nodo->siguiente = nodo_nuevo;
@@ -92,13 +94,20 @@ int lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
             (indice)++;
             nodo = nodo->siguiente;
         }
-    }else{
-        // Si la posicion es invalida. Por ejemplo, tengo una lista de 5 elementos, y lo quiero agregar en la posicion 20.
-        lista->nodo_fin->siguiente = nodo_nuevo; // Primero, antes de cambiar el puntero final, hago que el elemento del puntero final (osea el anterior) apunte al nuevo.
-        lista->nodo_fin = nodo_nuevo; // Ahora si actualizo el puntero final.
-        lista->nodo_fin->elemento = elemento;
-        lista->nodo_fin->siguiente = NULL;
-        (lista->cantidad)++;
+
+    }else{ // Si son posiciones invalidas (negativas o exceden las posiciones ya ubicadas.)
+
+        if (lista->cantidad == 0){ // Si la lista esta vacia.
+            lista->nodo_inicio = nodo_nuevo;
+            lista->nodo_fin = nodo_nuevo;
+            (lista->cantidad)++;
+        }else{ // Si la lista ya tiene elementos.
+            lista->nodo_fin->siguiente = nodo_nuevo; // Primero, antes de cambiar el puntero final, hago que el elemento del puntero final (osea el anterior) apunte al nuevo.
+            lista->nodo_fin = nodo_nuevo; // Ahora si actualizo el puntero final.
+            lista->nodo_fin->elemento = elemento;
+            lista->nodo_fin->siguiente = NULL;
+            (lista->cantidad)++;
+        }
     }
 
     return 0;
