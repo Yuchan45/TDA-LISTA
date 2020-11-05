@@ -72,6 +72,14 @@ int lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
         if(posicion == 0){
             nodo_nuevo->siguiente = lista->nodo_inicio;
             lista->nodo_inicio = nodo_nuevo;
+            (lista->cantidad)++;
+            return 0;
+        }
+        if(posicion == lista->cantidad){
+            lista->nodo_fin->siguiente = nodo_nuevo;
+            lista->nodo_fin = nodo_nuevo;
+            (lista->cantidad)++;
+            return 0;
         }
 
         while(nodo != NULL){
@@ -84,9 +92,6 @@ int lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
             (indice)++;
             nodo = nodo->siguiente;
         }
-
-        
-       
     }else{
         // Si la posicion es invalida. Por ejemplo, tengo una lista de 5 elementos, y lo quiero agregar en la posicion 20.
         lista->nodo_fin->siguiente = nodo_nuevo; // Primero, antes de cambiar el puntero final, hago que el elemento del puntero final (osea el anterior) apunte al nuevo.
