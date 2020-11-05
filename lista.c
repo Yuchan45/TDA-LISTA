@@ -78,6 +78,7 @@ int lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
             if ((indice + 1) == posicion){
                 nodo_nuevo->siguiente = nodo->siguiente;
                 nodo->siguiente = nodo_nuevo;
+                (lista->cantidad)++;
             }
             //printf("Puntero a elemento: %p, elemento: %c, indice: %li\n", nodo->elemento, *(char*)(nodo->elemento), indice);
             (indice)++;
@@ -88,7 +89,11 @@ int lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
        
     }else{
         // Si la posicion es invalida. Por ejemplo, tengo una lista de 5 elementos, y lo quiero agregar en la posicion 20.
-        lista_insertar(lista, elemento); // Agrego al final.
+        lista->nodo_fin->siguiente = nodo_nuevo; // Primero, antes de cambiar el puntero final, hago que el elemento del puntero final (osea el anterior) apunte al nuevo.
+        lista->nodo_fin = nodo_nuevo; // Ahora si actualizo el puntero final.
+        lista->nodo_fin->elemento = elemento;
+        lista->nodo_fin->siguiente = NULL;
+        (lista->cantidad)++;
     }
 
     return 0;
