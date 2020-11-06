@@ -10,7 +10,7 @@ void recorrer_y_mostrar(lista_t* lista){
     size_t posicion = 1;
     sig = lista->nodo_inicio;
     while(sig != NULL){
-        printf("Puntero a elemento: %p, elemento: %c, posicion: %li\n", sig->elemento, *(char*)(sig->elemento), posicion);
+        printf("Puntero a elemento: %p, elemento: %i, posicion: %li\n", sig->elemento, *(int*)(sig->elemento), posicion);
         (posicion)++;
         sig = sig->siguiente;
     }
@@ -26,248 +26,115 @@ void liberar_nodos(lista_t* lista){
 
 }
 
-void probar_creacion_lista(){
-    //Prueba la correcta creacion de una lista.
+void probar_lista_insertar(){
+    int dato_1 = 12;
+    char dato_char = 'A';
+    double dato_double = 20.1;
+
     lista_t* una_lista = NULL;
 
     pa2m_afirmar((una_lista=lista_crear()) != NULL, "Puedo crear una lista.");
-    pa2m_afirmar((una_lista->nodo_inicio) == NULL, "La lista se crea vacia. Con puntero de inicio = NULL.");
-    pa2m_afirmar((una_lista->nodo_fin) == NULL, "La lista se crea vacia. Con puntero de fin = NULL.");
-    pa2m_afirmar((una_lista->cantidad) == 0, "La lista se crea vacia. Con cantidad = 0.");
+    pa2m_afirmar((una_lista->nodo_inicio) == NULL, "Una lista se crea vacia. Con puntero de inicio = NULL.");
+    pa2m_afirmar((una_lista->nodo_fin) == NULL, "Una lista se crea vacia. Con puntero de fin = NULL.");
+    pa2m_afirmar((una_lista->cantidad) == 0, "Una lista se crea vacia. Con cantidad = 0.\n");
 
-    lista_destruir(una_lista);
-}
+    pa2m_afirmar((lista_insertar(NULL, &dato_1)) != 0, "Insertar devuelve error si recibe una lista invalida (Lista = NULL).\n");
 
-void probar_insertar_en_lista(){
-    //Prueba que los elementos se pueden insertar, siempre y cuando le mandes una lista valida.
-    lista_t* una_lista = lista_crear();
-    int d = 12, d2 = 33;
+    printf(" - Inserto 1º elemento - \n");
+    pa2m_afirmar((lista_insertar(una_lista, &dato_1)) == 0, "Insertar 1º valor (int) en una lista.");
+    pa2m_afirmar((*(int*)una_lista->nodo_inicio->elemento) == dato_1, "Valor correcto - El elemento se inserto correctamente.");
+    pa2m_afirmar((una_lista->cantidad) == 1, "Ahora el contador de cantidad es 1.");
+    pa2m_afirmar((una_lista->nodo_inicio->elemento) == &dato_1, "El nodo de inicio ahora apunta al dato ingresado.");
+    pa2m_afirmar((una_lista->nodo_fin->elemento) == &dato_1, "El nodo de fin ahora apunta al dato ingresado.");
+    pa2m_afirmar(una_lista->nodo_inicio->elemento == una_lista->nodo_fin->elemento, "Como es la 1º insercion, el nodo fin y nodo inicio apuntan al mismo elemento.\n");
 
-    pa2m_afirmar((lista_insertar(NULL, &d)) != 0, "Puedo insertar un valor en una lista que no existe.");
-    pa2m_afirmar((lista_insertar(una_lista, &d)) != -1, "Puedo insertar el primer valor en la lista.");
-    pa2m_afirmar((lista_insertar(una_lista, &d2)) != -1, "Puedo insertar el segundo valor en la lista.");
+    printf(" - Inserto 2º elemento - \n");
+    pa2m_afirmar((lista_insertar(una_lista, &dato_char)) == 0, "Insertar 2º (char) en una lista.");
+    pa2m_afirmar((*(char*)una_lista->nodo_inicio->siguiente->elemento) == dato_char, "Valor correcto - El elemento se inserto correctamente.");
+    pa2m_afirmar((una_lista->cantidad) == 2, "Ahora el contador de cantidad es 2.");
+    pa2m_afirmar((una_lista->nodo_inicio->elemento) == &dato_1, "El nodo de inicio sigue siendo el primer dato ingresado.");
+    pa2m_afirmar((una_lista->nodo_fin->elemento) == &dato_char, "El nodo de fin ahora apunta al ultimo dato ingresado.");
+    pa2m_afirmar(una_lista->nodo_inicio->elemento != una_lista->nodo_fin->elemento, "Como es la 2º insercion, el nodo inicio y nodo fin apuntan a distintos elementos.\n");
+
+    printf(" - Inserto 3º elemento - \n");
+    pa2m_afirmar((lista_insertar(una_lista, &dato_double)) == 0, "Insertar 3º valor (double) en una lista.");
+    pa2m_afirmar((*(double*)una_lista->nodo_inicio->siguiente->siguiente->elemento) == dato_double, "Valor correcto - El elemento se inserto correctamente.");
+    pa2m_afirmar((una_lista->cantidad) == 3, "Ahora el contador de cantidad es 2.");
+    pa2m_afirmar((una_lista->nodo_inicio->elemento) == &dato_1, "El nodo de inicio sigue siendo el primer dato ingresado.");
+    pa2m_afirmar((una_lista->nodo_fin->elemento) == &dato_double, "El nodo de fin ahora apunta al ultimo dato ingresado.\n");
 
     free(una_lista->nodo_fin);
+    free(una_lista->nodo_inicio->siguiente);
     free(una_lista->nodo_inicio);
     lista_destruir(una_lista);
 
 }
 
-void probar_insertar_por_posicion_en_lista_vacia(){
-    int dato = 10;
-    lista_t* lista = lista_crear();
-
-    lista_insertar_en_posicion(lista, &dato, 0);
-    pa2m_afirmar(lista->nodo_inicio->elemento != NULL, "Puedo insertar un valor por posicion en una lista vacia.");
-
-    free(lista->nodo_inicio);
-    lista_destruir(lista);
-}
-
-void probar_correcta_insercion(){
-    //Prueba que los elementos que se insertan en la lista corectamente.
-    int dato = 1, dato2 = 2;
-    char dato3 = 'A';
+void probar_lista_insertar_en_posicion(){
+    int dato_1 = 12, dato_2 = 15;
+    char dato_char = 'A', dato_char_2 = 'Z';
+    double dato_double = 20.1;
+    //double dato_double_2 = 2.3;
 
     lista_t* lista = lista_crear();
 
-    lista_insertar(lista, &dato);
-    lista_insertar(lista, &dato2);
-    lista_insertar(lista, &dato3);
-
-    pa2m_afirmar(*(int*)(lista->nodo_inicio->elemento) == 1, "Valor correcto. El 1º valor se ingreso correctamente");
-    pa2m_afirmar(*(int*)(lista->nodo_inicio->siguiente->elemento) == 2, "Valor correcto. El 2º valor se ingreso correctamente");
-    pa2m_afirmar(*(char*)(lista->nodo_fin->elemento) == 'A', "Valor correcto. El ultimo valor se ingreso correctamente");
-
-    free(lista->nodo_fin);
-    free(lista->nodo_inicio->siguiente);
-    free(lista->nodo_inicio);
-    lista_destruir(lista);
+    pa2m_afirmar(lista_insertar_en_posicion(NULL, &dato_1, 3) != 0, "La funcion devuelve error si recibe una lista invalida (Lista = NULL).\n");
     
-}
+    printf(" - Inserto 1º elemento - \n");
+    pa2m_afirmar(lista_insertar_en_posicion(lista, &dato_1, 0) == 0, "Puedo insertar un valor (int) por posicion en una lista vacia."); //Funciona con pos = 0 o 1.
+    pa2m_afirmar((*(int*)lista->nodo_inicio->elemento) == dato_1, "Valor correcto - El elemento se inserto correctamente.");
+    pa2m_afirmar((lista->cantidad) == 1, "Ahora el contador de cantidad es 1.");
+    pa2m_afirmar((lista->nodo_inicio->elemento) == &dato_1, "El nodo de inicio ahora apunta al dato ingresado.");
+    pa2m_afirmar((lista->nodo_fin->elemento) == &dato_1, "El nodo de fin ahora apunta al dato ingresado.");
+    pa2m_afirmar(lista->nodo_inicio->elemento == lista->nodo_fin->elemento, "Como es la 1º insercion, el nodo fin y nodo inicio apuntan al mismo elemento.\n");
 
-void probar_lista_cantidad(){
-    // Prueba que el contador de cantidad sume al realizar cada operacion de "insertar" (al final).
-    int dato = 1, dato2 = 2, dato3 = 3;
+    printf(" - Inserto 2º elemento - (posicion no valida) - \n");
+    pa2m_afirmar(lista_insertar_en_posicion(lista, &dato_2, 48) == 0, "Puedo insertar un valor (int) por posicion (invalida) en una lista.");
+    pa2m_afirmar((*(int*)lista->nodo_inicio->siguiente->elemento) == dato_2, "Valor correcto - El elemento se inserto correctamente.");
+    pa2m_afirmar((lista->cantidad) == 2, "Ahora el contador de cantidad es 2.");
+    pa2m_afirmar((lista->nodo_inicio->elemento) == &dato_1, "El nodo de inicio sigue siendo el primer dato ingresado.");
+    pa2m_afirmar((lista->nodo_fin->elemento) == &dato_2, "El nodo de fin ahora apunta al ultimo dato ingresado.");
+    pa2m_afirmar(lista->nodo_inicio->elemento != lista->nodo_fin->elemento, "Como es la 2º insercion, el nodo inicio y nodo fin apuntan a distintos elementos.\n");
 
-    lista_t* lista = lista_crear();
+    printf(" - Inserto 3º elemento - (posicion 1, valida) - \n");
+    pa2m_afirmar(lista_insertar_en_posicion(lista, &dato_double, 1) == 0, "Puedo insertar un valor (double) en la posicion 1 de la lista.");
+    pa2m_afirmar((*(double*)lista->nodo_inicio->siguiente->elemento) == dato_double, "Valor correcto - El elemento se inserto correctamente.");
+    pa2m_afirmar((lista->cantidad) == 3, "Ahora el contador de cantidad es 3.");
+    pa2m_afirmar((lista->nodo_inicio->elemento) == &dato_1, "El nodo de inicio sigue siendo el primer dato ingresado.");
+    pa2m_afirmar((lista->nodo_fin->elemento) == &dato_2, "El nodo de fin no cambia (porque inserte en la primer posicion), sigue apuntando al nodo de antes.\n");
 
-    lista_insertar(lista, &dato);
-    pa2m_afirmar((int)(lista->cantidad) == 1, "El contador anda bien al agregar el primer elemento.");
-    lista_insertar(lista, &dato2);
-    pa2m_afirmar((int)(lista->cantidad) == 2, "El contador anda bien al agregar el segundo elemento.");
-    lista_insertar(lista, &dato3);
-    pa2m_afirmar((int)(lista->cantidad) == 3, "El contador anda bien al agregar el tercer elemento.");
+    printf(" - Inserto 4º elemento - (posicion 0, valida) - \n");
+    pa2m_afirmar(lista_insertar_en_posicion(lista, &dato_char, 0) == 0, "Puedo insertar un valor (char) en la posicion 0 de la lista.");
+    pa2m_afirmar((*(char*)lista->nodo_inicio->elemento) == dato_char, "Valor correcto - El elemento se inserto correctamente.");
+    pa2m_afirmar((lista->cantidad) == 4, "Ahora el contador de cantidad es 4.");
+    pa2m_afirmar((lista->nodo_inicio->elemento) == &dato_char, "El nodo de inicio ahora apunta a este nodo.");
+    pa2m_afirmar((lista->nodo_fin->elemento) == &dato_2, "El nodo de fin no cambia (porque inserte en la posicion 0), sigue apuntando al nodo de antes.\n");
 
+    printf(" - Inserto 5º elemento - (posicion 0, valida) - \n");
+    pa2m_afirmar(lista_insertar_en_posicion(lista, &dato_char_2, 5) == 0, "Puedo insertar un valor (char) en la posicion maxima de la lista.");
+    pa2m_afirmar((*(char*)lista->nodo_fin->elemento) == dato_char_2, "Valor correcto - El elemento se inserto correctamente.");
+    pa2m_afirmar((lista->cantidad) == 5, "Ahora el contador de cantidad es 5.");
+    pa2m_afirmar((lista->nodo_inicio->elemento) == &dato_char, "El nodo de inicio no cambia, sigue apuntando al de antes.");
+    pa2m_afirmar((lista->nodo_fin->elemento) == &dato_char_2, "El nodo de fin ahora apunta a este nuevo nodo.\n");
 
-    free(lista->nodo_fin);
-    free(lista->nodo_inicio->siguiente);   
-    free(lista->nodo_inicio);
-    lista_destruir(lista);
+    /*
+    printf(" - Inserto 6º elemento - (posicion -1, no valida) - \n");
+    pa2m_afirmar(lista_insertar_en_posicion(lista, &dato_double_2, -1) == 0, "Puedo insertar un valor en la posicion 0 de la lista.");
+    pa2m_afirmar((*(double*)lista->nodo_fin->elemento) == dato_double_2, "Valor correcto - El elemento se inserto correctamente.");
+    pa2m_afirmar((lista->cantidad) == 6, "Ahora el contador de cantidad es 6.");
+    pa2m_afirmar((lista->nodo_inicio->elemento) == &dato_char, "El nodo de inicio no cambia, sigue apuntando al de antes.");
+    pa2m_afirmar((lista->nodo_fin->elemento) == &dato_char_2, "El nodo de fin ahora apunta a este nuevo nodo.\n");
+    */
 
-}
+    //free(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente->siguiente);
 
-void probar_insertar_distintos_tipos_de_datos(){
-    //En realidad no se si hace falta, porque se supone que guarda punteros void \o/.
-    int dato = 1;
-    char dato2 = 'A';
-    //int dato3 = NULL;
-    double dato4 = 20.1;
-
-    lista_t* lista = lista_crear();
-
-    lista_insertar(lista, &dato);
-    lista_insertar(lista, &dato2);
-    //lista_insertar(lista, &dato3);
-    lista_insertar(lista, &dato4);
-
-    pa2m_afirmar(*(int*)(lista->nodo_inicio->elemento) == 1, "El PRIMER valor (de tipo int) se ingreso correctamente");
-    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->elemento) == 'A', "El SEGUNDO valor (de tipo char) se ingreso correctamente");
-    //pa2m_afirmar(*(int*)(lista->nodo_inicio->elemento) == NULL, "El TERCER valor (Un NULL) se ingreso correctamente (se puede ingresar nulls)");
-    pa2m_afirmar(*(double*)(lista->nodo_fin->elemento) == 20.1, "El ULTIMO valor (de tipo double) se ingreso correctamente");
-
-    free(lista->nodo_fin);
-    //free(lista->nodo_inicio->siguiente->siguiente);
-    free(lista->nodo_inicio->siguiente);
-    free(lista->nodo_inicio);
-    lista_destruir(lista);
-}
-
-void probar_lista_cantidad_de_insertar_en_posicion(){
-    //Prueba que el contador de cantidad sume correctamente al agregar elementos de diferentes formas y posiciones.
-    int dato = 1, dato2 = 2;
-    int elemento_insertar_1 = 45, elemento_insertar_2 = 56;
-
-    lista_t* lista = lista_crear();
-
-    lista_insertar(lista, &dato);
-    pa2m_afirmar((int)(lista->cantidad) == 1, "El contador anda bien al agregar el primer elemento.");
-    lista_insertar(lista, &dato2);
-    pa2m_afirmar((int)(lista->cantidad) == 2, "El contador anda bien al agregar el segundo elemento.");
-    lista_insertar_en_posicion(lista, &elemento_insertar_1, 3); //La lista tiene cantidad 2. osea 2 elementos, si pongo posicion 3, deberia ponerlo al final.
-    pa2m_afirmar((int)(lista->cantidad) == 3, "El contador anda bien al agregar el tercer elemento (con posicion valida).");
-    lista_insertar_en_posicion(lista, &elemento_insertar_2, 23); // aca tmb lo pone al final.
-    pa2m_afirmar((int)(lista->cantidad) == 4, "El contador anda bien al agregar el cuarto elemento (con posicion invalida).");
-
-    // La lista queda asi: [1, 2, 45, 56]
-
-    free(lista->nodo_fin);
-    free(lista->nodo_inicio->siguiente->siguiente);
-    free(lista->nodo_inicio->siguiente);
-    free(lista->nodo_inicio);
-    lista_destruir(lista);
-}
-
-void probar_insertar_en_posicion_invalida(){
-    int dato = 1, dato2 = 2;
-    int elemento_insertar_posicion = 45, elemento_insertar_posicion_2 = 56;
-    //int elemento_insertar_posicion_3 = 99;
-
-    lista_t* lista = lista_crear();
-
-    lista_insertar(lista, &dato);
-    lista_insertar(lista, &dato2);
-    lista_insertar_en_posicion(lista, &elemento_insertar_posicion, 4); //La lista tiene cantidad 2. osea 2 elementos, si pongo posicion 4, deberia ponerlo al final.
-    lista_insertar_en_posicion(lista, &elemento_insertar_posicion_2, 108);
-    //lista_insertar_en_posicion(lista, &elemento_insertar_posicion_3, -1); //Prueba con usuario usando mal. Lo comento para que no salte warning siempre.
-
-    //printf("%i\n", *(int*)lista->nodo_inicio->siguiente->siguiente->elemento);
-
-    pa2m_afirmar((lista->nodo_inicio->siguiente->siguiente) != NULL, "Puedo insertar 1º elemento por posicion invalida (posicion 4 de una lista con 2 elementos)");
-    pa2m_afirmar((lista->nodo_inicio->siguiente->siguiente->siguiente) != NULL, "Puedo insertar 2º elemento por posicion invalida (posicion supera cantidad)");
-    //pa2m_afirmar(*(int*)(lista->nodo_fin->elemento) == 99, "Insertar 3º elemento en posicion invalida. (nº negativo)ASDASDAS"); // Lo comento porque sino me salta warning siempre
-   
-    // La lista queda asi: [1, 2, 3, 45, 56, 99]
-
-    free(lista->nodo_fin);
-    //free(lista->nodo_inicio->siguiente->siguiente->siguiente);
-    free(lista->nodo_inicio->siguiente->siguiente);
-    free(lista->nodo_inicio->siguiente);
-    free(lista->nodo_inicio);
-    lista_destruir(lista);
-}
-
-void probar_insertar_en_posicion_valida(){
-    char dato = 'A', dato2 ='B', dato3 ='C';
-
-    char elemento_insertar_posicion = 'X';
-    char elemento_insertar_posicion_2 = 'Y';
-    char elemento_insertar_posicion_3 = 'J';
-    char elemento_insertar_posicion_4 = 'Z';
-    char elemento_insertar_posicion_5 = 'K';
-
-    lista_t* lista = lista_crear();
-
-    lista_insertar(lista, &dato);
-    lista_insertar(lista, &dato2);
-    lista_insertar(lista, &dato3);
-
-    lista_insertar_en_posicion(lista, &elemento_insertar_posicion, 0); //Inserto al inicio.
-    pa2m_afirmar((lista->nodo_inicio) != NULL, "Puedo insertar al inicio (posicion 0)");
-    lista_insertar_en_posicion(lista, &elemento_insertar_posicion_4, 1); //Inserto en la posicion 1.
-    pa2m_afirmar((lista->nodo_inicio->siguiente) != NULL, "Puedo insertar en posicion 1.");
-    lista_insertar_en_posicion(lista, &elemento_insertar_posicion_3, 0); //Inserto al inicio DENUEVO.
-    pa2m_afirmar((lista->nodo_inicio) != NULL, "Puedo insertar al inicio (posicion 0 denuevo)");
-    lista_insertar_en_posicion(lista, &elemento_insertar_posicion_2, 7); //Inserto al final de forma correcta. La lista tiene 6 elementos. Paso la posicion 7.
-    pa2m_afirmar((lista->nodo_fin) != NULL, "Puedo insertar al final de forma valida (posicion es el final de la lista).");
-
-    lista_insertar_en_posicion(lista, &elemento_insertar_posicion_5, 3); //Inserto en la posicion 1.
-    pa2m_afirmar((lista->nodo_inicio->siguiente) != NULL, "Puedo insertar en posicion 3.");
-
-    //Inserto al final (por ser posicion invalida en el caso de que el usuario ignore el warning).
-    /*lista_insertar_en_posicion(lista, &elemento_insertar_posicion_2, -5); */
-
-
-    // Asi comienza la lista: ['A', 'B', 'C'] y asi termina: ['X', 'Z', 'A', 'B', 'C', 'Y'].
-
-    free(lista->nodo_fin);
-    free(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente->siguiente->siguiente);
-    free(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente->siguiente);
     free(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente);
     free(lista->nodo_inicio->siguiente->siguiente->siguiente);
     free(lista->nodo_inicio->siguiente->siguiente);
     free(lista->nodo_inicio->siguiente);
     free(lista->nodo_inicio);
     lista_destruir(lista);
-    
-}
-void probar_se_inserta_correctamente(){
-    char dato = 'A', dato2 ='B';
 
-    char elemento_insertar_posicion = 'X';
-    char elemento_insertar_posicion_2 = 'Y';
-    char elemento_insertar_posicion_3 = 'Z';
-    char elemento_insertar_posicion_4 = 'J';
-    char elemento_insertar_posicion_5 = 'K';
-
-    lista_t* lista = lista_crear();
-
-    lista_insertar(lista, &dato);
-    lista_insertar(lista, &dato2);
-
-    lista_insertar_en_posicion(lista, &elemento_insertar_posicion, 0); //Inserto al inicio.
-    lista_insertar_en_posicion(lista, &elemento_insertar_posicion_2, 1); //Inserto en la posicion 1.
-    lista_insertar_en_posicion(lista, &elemento_insertar_posicion_3, 5); //Inserto al final de forma correcta. La lista tiene 4 elementos. Paso la posicion 5.
-    lista_insertar_en_posicion(lista, &elemento_insertar_posicion_4, 700); //Insertar elemento al final por posicion invalida (posicion supera cantidad).
-    lista_insertar_en_posicion(lista, &elemento_insertar_posicion_5, 3); //Inserto en la posicion 3.
-
-    pa2m_afirmar(*(char*)(lista->nodo_inicio->elemento) == 'X', "1º valor correcto. Elemento ubicado correctamente.");
-    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->elemento) == 'Y', "2º valor correcto. Elemento ubicado correctamente.");
-    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->siguiente->elemento) == 'A', "3º valor correcto. Elemento ubicado correctamente.");
-    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->siguiente->siguiente->elemento) == 'K', "4º valor correcto. Elemento ubicado correctamente.");
-    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente->elemento) == 'B', "5º valor correcto. Elemento ubicado correctamente.");
-    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente->siguiente->elemento) == 'Z', "6º valor correcto. Elemento ubicado correctamente.");
-    pa2m_afirmar(*(char*)(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente->siguiente->siguiente->elemento) == 'J', "7º valor correcto. Elemento ubicado correctamente.");
-
-
-    free(lista->nodo_fin);
-    free(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente->siguiente);
-    free(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente);
-    free(lista->nodo_inicio->siguiente->siguiente->siguiente);
-    free(lista->nodo_inicio->siguiente->siguiente);
-    free(lista->nodo_inicio->siguiente);
-    free(lista->nodo_inicio);
-    lista_destruir(lista);
 }
 
 
@@ -276,9 +143,16 @@ int main(){
     /*       PRUEBAS       */
     
     pa2m_nuevo_grupo("PRUEBAS DE LISTA");
+
+    printf("\n---------PROBAR_LISTA_INSERTAR---------\n");
+    probar_lista_insertar();
+
+    printf("\n---------PROBAR_LISTA_INSERTAR_EN_POSICION---------\n");
+    probar_lista_insertar_en_posicion();
+
+/*
     printf("\n---------probar_creacion_lista---------\n");
     probar_creacion_lista();
-
 
     pa2m_nuevo_grupo("PRUEBAS DE LISTA - Insertar al final");
     printf("\n---------probar_insertar_en_lista---------\n");
@@ -290,7 +164,8 @@ int main(){
     printf("\n---------probar_lista_cantidad---------\n");
     probar_lista_cantidad();
     
-
+*/
+/*
     pa2m_nuevo_grupo("PRUEBAS DE LISTA - Insertar en posicion");
     printf("\n---------probar_insertar_por_posicion_en_lista_vacia---------\n");
     probar_insertar_por_posicion_en_lista_vacia();
@@ -302,47 +177,25 @@ int main(){
     probar_lista_cantidad_de_insertar_en_posicion();
     printf("\n---------probar_valores_ingresados_por_posicion_correctamente---------\n");
     probar_se_inserta_correctamente();
-
+*/
     pa2m_mostrar_reporte();
     
 
     /*        MAIN         */
     
     printf("\n-------------------------M.A.I.N--------------------------\n\n");
-    /*
-    char dato = 'A';
-    char dato2 = 'B';
-    char dato3 = 'C';
-
-
+    int a = 5, b = 1, c = 3, d = 12;
     lista_t* lista = lista_crear();
-
-    lista_insertar(lista, &dato);
-    lista_insertar(lista, &dato2);
-    lista_insertar(lista, &dato3);
-    printf("Lista.cantidad = %li\n", lista->cantidad);
-
-    recorrer_y_mostrar(lista);
-    //liberar_nodos(lista);
-
-    free(lista->nodo_inicio->siguiente);
-    free(lista->nodo_inicio);
-    free(lista->nodo_fin);
-    lista_destruir(lista);
-*/
-/*
-    printf("elemento: %i\n", *(int*)(lista->nodo_inicio->elemento));
-    //printf("elemento: %i\n", *(int*)((lista->nodo_inicio + 2)->elemento));
-    //printf("elemento: %i\n", *(int*)((lista->nodo_inicio + 4)->elemento));
-
-    printf("elemento: %c\n", *(char*)(lista->nodo_inicio->siguiente->elemento));
-    printf("elemento: %d (1 es true)\n", *(bool*)((lista->nodo_inicio + 2)->siguiente->elemento));
-
-
-    //printf("elemento: %c\n", *(char*)(lista->nodo_inicio + 2)->elemento);
-    //printf("elemento: %i\n", *(int*)(lista->nodo_inicio + 3)->elemento);
-    //printf("elemento: %f\n", *(float*)(lista->nodo_inicio + lista->cantidad)->elemento);
-    printf("elemento: %f\n", *(double*)lista->nodo_fin->elemento);
-*/
+    lista_insertar_en_posicion(lista, &b, 100);
     
+    lista_insertar(lista, &a);
+    /*
+    lista_insertar(lista, &b);
+    lista_insertar(lista, &c);
+    lista_insertar(lista, &d);
+*/
+    recorrer_y_mostrar(lista);
+
+    void* elemento = lista_ultimo(lista);
+    printf("\n%i\n", *(int*)(elemento));
 }

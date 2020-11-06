@@ -72,7 +72,8 @@ int lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
         if(posicion == 0){ // Caso el nodo a agregar es en la primer posicion.
             nodo_nuevo->siguiente = lista->nodo_inicio;
             lista->nodo_inicio = nodo_nuevo;
-            //lista->nodo_fin = nodo_nuevo;
+            if (lista->cantidad == 0) // Si la lista esta vacia (cantidad = 0) y el usuario te pasa la posicion 0.
+                lista->nodo_fin = nodo_nuevo;
             (lista->cantidad)++;
             return 0;
         }
@@ -104,7 +105,6 @@ int lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
         }else{ // Si la lista ya tiene elementos.
             lista->nodo_fin->siguiente = nodo_nuevo; // Primero, antes de cambiar el puntero final, hago que el elemento del puntero final (osea el anterior) apunte al nuevo.
             lista->nodo_fin = nodo_nuevo; // Ahora si actualizo el puntero final.
-            lista->nodo_fin->elemento = elemento;
             lista->nodo_fin->siguiente = NULL;
             (lista->cantidad)++;
         }
@@ -112,6 +112,27 @@ int lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
 
     return 0;
 }
+
+/* 
+ * Devuelve el último elemento de la lista o NULL si la lista se
+ * encuentra vacía.
+ */
+void* lista_ultimo(lista_t* lista){
+    if(!lista)
+        return NULL;
+
+    nodo_t* nodo = lista->nodo_inicio;
+
+    while(nodo != NULL){
+        if(nodo->siguiente == NULL){
+            //printf("ULTIMO elemento: %i, posicion: %li\n", *(int*)(nodo->elemento), posicion);
+            return nodo->elemento;
+        }
+        nodo = nodo->siguiente;
+    }
+
+}
+
 
 void lista_destruir(lista_t* lista){
     free(lista);
