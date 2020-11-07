@@ -186,16 +186,30 @@ int main(){
     printf("\n-------------------------M.A.I.N--------------------------\n\n");
     int a = 5, b = 1, c = 3, d = 12;
     lista_t* lista = lista_crear();
+
+    /* ANDA - FALTA TESTEAR
     lista_insertar_en_posicion(lista, &b, 100);
     
-    lista_insertar(lista, &a);
-    /*
+    
     lista_insertar(lista, &b);
     lista_insertar(lista, &c);
     lista_insertar(lista, &d);
-*/
+
     recorrer_y_mostrar(lista);
 
     void* elemento = lista_ultimo(lista);
     printf("\n%i\n", *(int*)(elemento));
+    */
+
+    /* ANDA - FALTA TESTEAR
+    bool es_vacia = lista_vacia(lista);
+    printf("%s", es_vacia ? "true" : "false");
+    */
+
+    /* ANDA - FALTA TESTEAR
+    int cant = lista_elementos(lista);
+    printf("%i\n", cant);
+    */
+
+
 }

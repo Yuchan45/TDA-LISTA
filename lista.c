@@ -133,6 +133,22 @@ void* lista_ultimo(lista_t* lista){
 
 }
 
+/* 
+ * Devuelve true si la lista está vacía o false en caso contrario.
+ */
+bool lista_vacia(lista_t* lista){
+    // printf("%s", es_vacia ? "true" : "false");
+    if(lista == NULL || lista->cantidad == 0)
+        return true;
+    return false;
+}
+
+/*
+ * Devuelve la cantidad de elementos almacenados en la lista.
+ */
+size_t lista_elementos(lista_t* lista){
+    return lista->cantidad;
+}
 
 void lista_destruir(lista_t* lista){
     free(lista);
