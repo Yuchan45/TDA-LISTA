@@ -113,6 +113,89 @@ int lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
     return 0;
 }
 
+/*
+ * Quita de la lista el elemento que se encuentra en la ultima posición.
+ * Devuelve 0 si pudo eliminar o -1 si no pudo.
+ */
+int lista_borrar(lista_t* lista){
+    if (!lista)
+        return -1;
+    
+    if (lista->cantidad == 1){
+        free(lista->nodo_fin);
+        lista->nodo_inicio = NULL;
+        lista->nodo_fin = NULL;
+        (lista->cantidad)--;
+    }else{
+        nodo_t* nodo = lista->nodo_inicio;
+        size_t posicion = 0;
+
+        (lista->cantidad)--;
+        free(lista->nodo_fin);
+        while(nodo != NULL){
+            if ((posicion + 1) == lista->cantidad){
+                //printf("Ante-ultimo elemento: %i, posicion: %li\n", *(int*)(nodo->elemento), posicion);
+                lista->nodo_fin = nodo;
+                lista->nodo_fin->siguiente = NULL;
+                return 0;
+            }
+            (posicion)++;
+            nodo = nodo->siguiente;
+        }
+    }
+
+    return 0;
+}
+
+
+/*
+ * Quita de la lista el elemento que se encuentra en la posición
+ * indicada, donde 0 es el primer elemento.  
+ * En caso de no existir esa posición se intentará borrar el último
+ * elemento.  
+ * Devuelve 0 si pudo eliminar o -1 si no pudo.
+ */
+int lista_borrar_de_posicion(lista_t* lista, size_t posicion){
+    if (!lista)
+        return -1;
+
+    if ( (posicion > 0) && (posicion < (lista->cantidad-1)) ){ // Si no es ni el ultimo nodo ni el primero.
+        printf("hola\n");
+        nodo_t* nodo_auxiliar;
+        nodo_t* nodo = lista->nodo_inicio;
+        size_t indice = 0;
+
+        while(nodo != NULL){
+            if ((indice + 1) == posicion){
+                //printf("Ante-ultimo elemento: %i, posicion: %li\n", *(int*)(nodo->elemento), posicion);
+                nodo_auxiliar = nodo->siguiente;
+                nodo->siguiente = nodo_auxiliar->siguiente;
+                free(nodo_auxiliar);
+                (lista->cantidad)--;
+
+            }
+            (indice)++;
+            nodo = nodo->siguiente;
+        }
+    }else{
+        // Si la posicion es 0 o la ultima. Hay que reasignar punteros de la lista.
+        if (posicion == 0 && (lista->cantidad > 1)){ // Si la lista tuviese 1 elemento solo, directamente habria que borrar el ultimo elemento.
+            //printf("entro aca\n");
+            nodo_t* nodo_auxiliar;
+            (lista->cantidad)--;
+            nodo_auxiliar = lista->nodo_inicio;
+            lista->nodo_inicio = lista->nodo_inicio->siguiente;
+            free(nodo_auxiliar);
+            return 0;
+        }else{ // Aca deberia entrar si tiene mas de 1 elemento.
+            lista_borrar(lista);
+        }
+    }
+    //printf("paso por aca\n\n\n");
+    return 0;
+}
+
+
 /* 
  * Devuelve el último elemento de la lista o NULL si la lista se
  * encuentra vacía.
@@ -120,17 +203,7 @@ int lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
 void* lista_ultimo(lista_t* lista){
     if(!lista)
         return NULL;
-
-    nodo_t* nodo = lista->nodo_inicio;
-
-    while(nodo != NULL){
-        if(nodo->siguiente == NULL){
-            //printf("ULTIMO elemento: %i, posicion: %li\n", *(int*)(nodo->elemento), posicion);
-            return nodo->elemento;
-        }
-        nodo = nodo->siguiente;
-    }
-
+    return lista->nodo_fin->elemento;
 }
 
 /* 
