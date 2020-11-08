@@ -187,27 +187,61 @@ void probar_lista_borrar(){
     //recorrer_y_mostrar(lista);
 }
 
-probar_lista_borrar_de_posicion(){
-    int a = 5, b = 1, c = 3, d = 15;
+void probar_lista_borrar_de_posicion(){
+    //   1º,     2º,    3º,    4º,     5º ->orden de elementos.
+    int a = 5, b = 1, c = 3, d = 15, e = 23;
     lista_t* lista = lista_crear();
 
-    pa2m_afirmar((lista_insertar(lista, &a)) == 0, "Inserto 1º valor en una lista.");
-    pa2m_afirmar((lista_insertar(lista, &b)) == 0, "Inserto 2º valor en una lista.");
-    pa2m_afirmar((lista_insertar(lista, &c)) == 0, "Inserto 3º valor en una lista.");
-    pa2m_afirmar((lista_insertar(lista, &d)) == 0, "Inserto 4º valor en una lista.");
-    pa2m_afirmar((lista->cantidad) == 4, "El contador de cantidad deberia ser de 4.");
+    pa2m_afirmar((lista_insertar(lista, &a)) == 0, "Inserto 1º elemento en una lista.");
+    pa2m_afirmar((lista_insertar(lista, &b)) == 0, "Inserto 2º elemento en una lista.");
+    pa2m_afirmar((lista_insertar(lista, &c)) == 0, "Inserto 3º elemento en una lista.");
+    pa2m_afirmar((lista_insertar(lista, &d)) == 0, "Inserto 4º elemento en una lista.");
+    pa2m_afirmar((lista_insertar(lista, &e)) == 0, "Inserto 5º elemento en una lista.")
+    pa2m_afirmar((lista->cantidad) == 5, "Cantidad deberia ser de 5.");
     pa2m_afirmar((lista->nodo_inicio->elemento) == &a, "El nodo de inicio contiene al 1º elemento.");
-    pa2m_afirmar((lista->nodo_fin->elemento) == &d, "El nodo de fin contiene al 4º elemento.\n");
+    pa2m_afirmar((lista->nodo_fin->elemento) == &e, "El nodo de fin contiene al 5º elemento.\n");
 
-    pa2m_afirmar(lista_borrar_de_posicion(lista, 0) == 0, "Puedo borrar el 1º elemento, osea el 0, de la lista.");
-    pa2m_afirmar((lista->cantidad) == 3, "El contador de cantidad deberia ser de 3.");
+    pa2m_afirmar(lista_borrar_de_posicion(NULL, 0) != 0, "Borrar por posicion pasando una lista invalida deberia fallar.\n");
+
+    //   1º, 2º, 3º, 4º, 5º ->orden de elementos.
+    //  [5, 1, 3, 15, 23]
+
+    pa2m_afirmar(lista_borrar_de_posicion(lista, 0) == 0, "Puedo borrar el 1º elemento, osea posicion = 0, de la lista.");
+    pa2m_afirmar((lista->cantidad) == 4, "Cantidad deberia ser de 4.");
     pa2m_afirmar((lista->nodo_fin->siguiente) == NULL, "El ultimo nodo queda apuntando a NULL.");
     pa2m_afirmar((lista->nodo_inicio->elemento) == &b, "Ahora el nodo de inicio deberia contener al 2º elemento.");
+    pa2m_afirmar((lista->nodo_fin->elemento) == &e, "El nodo de fin deberia seguir conteniendo al 5º elemento.\n");
+    //  2º, 3º, 4º, 5º ->orden de elementos.
+    // [1, 3, 15, 23]
+
+    pa2m_afirmar(lista_borrar_de_posicion(lista, 3) == 0, "Puedo borrar el ULTIMO elemento pasando la posicion del ultimo elemento (posicion valida), osea posicion = 3");
+    pa2m_afirmar((lista->cantidad) == 3, "Cantidad deberia ser de 3.");
+    pa2m_afirmar((lista->nodo_fin->siguiente) == NULL, "El ultimo nodo queda apuntando a NULL.");
+    pa2m_afirmar((lista->nodo_inicio->elemento) == &b, "El nodo de inicio deberia seguir conteniendo al 2º elemento.");
+    pa2m_afirmar((lista->nodo_fin->elemento) == &d, "El nodo de fin ahora deberia contener al 4º elemento.\n");
+    //  2º, 3º, 4º ->orden de elementos.
+    // [1, 3, 15]
+
+    pa2m_afirmar(lista_borrar_de_posicion(lista, 1) == 0, "Puedo borrar el elemento en la posicion 1, osea posicion = 1");
+    pa2m_afirmar((lista->cantidad) == 2, "Cantidad deberia ser de 2.");
+    pa2m_afirmar((lista->nodo_fin->siguiente) == NULL, "El ultimo nodo queda apuntando a NULL.");
+    pa2m_afirmar((lista->nodo_inicio->elemento) == &b, "El nodo de inicio deberia seguir conteniendo al 2º elemento.");
     pa2m_afirmar((lista->nodo_fin->elemento) == &d, "El nodo de fin deberia seguir conteniendo al 4º elemento.\n");
+    //  2º, 4º ->orden de elementos.
+    // [1, 15]
 
+    pa2m_afirmar(lista_borrar_de_posicion(lista, 300) == 0, "Puedo borrar el ULTIMO elemento (pasando una posicion invalida), osea posicion = 300.");
+    pa2m_afirmar((lista->cantidad) == 1, "Cantidad deberia ser de 1.");
+    pa2m_afirmar((lista->nodo_fin->siguiente) == NULL, "El ultimo nodo queda apuntando a NULL.");
+    pa2m_afirmar((lista->nodo_inicio->elemento) == &b, "El nodo de inicio deberia seguir conteniendo al 2º elemento.");
+    pa2m_afirmar((lista->nodo_fin->elemento) == &b, "El nodo de fin ahora deberia contener al 2º elemento.\n");
+    //  2º ->orden de elementos.
+    // [1]
 
-
-
+    pa2m_afirmar(lista_borrar_de_posicion(lista, 300) == 0, "Puedo borrar el elemento de la posicion 0, el ultimo que queda (pasando posicion = 0)");
+    pa2m_afirmar((lista->cantidad) == 0, "Cantidad deberia ser de 0.");
+    pa2m_afirmar((lista->nodo_inicio) == NULL, "El nodo de inicio es NULL.");
+    pa2m_afirmar((lista->nodo_fin) == NULL, "El nodo de fin ahora es NULL.\n");
 
     free(lista);
 

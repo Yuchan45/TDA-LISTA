@@ -160,7 +160,6 @@ int lista_borrar_de_posicion(lista_t* lista, size_t posicion){
         return -1;
 
     if ( (posicion > 0) && (posicion < (lista->cantidad-1)) ){ // Si no es ni el ultimo nodo ni el primero.
-        printf("hola\n");
         nodo_t* nodo_auxiliar;
         nodo_t* nodo = lista->nodo_inicio;
         size_t indice = 0;
@@ -186,7 +185,7 @@ int lista_borrar_de_posicion(lista_t* lista, size_t posicion){
             nodo_auxiliar = lista->nodo_inicio;
             lista->nodo_inicio = lista->nodo_inicio->siguiente;
             free(nodo_auxiliar);
-            return 0;
+
         }else{ // Aca deberia entrar si tiene mas de 1 elemento.
             lista_borrar(lista);
         }
