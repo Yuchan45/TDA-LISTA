@@ -143,14 +143,21 @@ void probar_lista_es_vacia(){
     int dato_1 = 12, dato_2 = 15;
     lista_t* lista = lista_crear();   
 
-    pa2m_afirmar(lista_vacia(lista) == 1, "La lista esta vacia."); 
-    lista_insertar(lista, &dato_1);
-    pa2m_afirmar(lista_vacia(lista) != 1, "Agrego elemento. La lista no esta vacia.");
-    lista_insertar(lista, &dato_2);
-    pa2m_afirmar(lista_vacia(lista) != 1, "Agrego elemento. La lista no esta vacia.");
+    pa2m_afirmar(lista_vacia(NULL) == 1, "Si la lista es NULL, la lista esta vacia."); 
+    pa2m_afirmar(lista_vacia(lista) == 1, "La lista esta vacia.\n"); 
 
-    free(lista->nodo_inicio->siguiente);
-    free(lista->nodo_inicio);
+    pa2m_afirmar((lista_insertar(lista, &dato_1)) == 0, "Inserto 1º valor en una lista.");
+    pa2m_afirmar(lista_vacia(lista) != 1, "La lista no esta vacia.");
+
+    pa2m_afirmar((lista_insertar(lista, &dato_2)) == 0, "Inserto 2º valor en una lista.");
+    pa2m_afirmar(lista_vacia(lista) != 1, "La lista no esta vacia.\n");
+
+    pa2m_afirmar(lista_borrar(lista) == 0, "Borro el ultimo elemento de la lista.");
+    pa2m_afirmar(lista_vacia(lista) != 1, "La lista aun no esta vacia.");
+
+    pa2m_afirmar(lista_borrar(lista) == 0, "Borro el ultimo elemento de la lista.");
+    pa2m_afirmar(lista_vacia(lista) == 1, "La lista esta vacia.");
+
     lista_destruir(lista);
 }
 
