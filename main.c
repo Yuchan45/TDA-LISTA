@@ -280,6 +280,22 @@ void probar_lista_ultimo(){
     free(lista);
 } 
 
+void probar_lista_elementos(){
+    int a = 5, b = 1, c = 3;
+    lista_t* lista = lista_crear();
+
+    pa2m_afirmar((lista_insertar(lista, &a)) == 0, "Inserto 1º elemento en una lista.");
+    pa2m_afirmar(lista_elementos(lista) == 1, "La lista ahora deberia tener 1 elemento/s.");
+    pa2m_afirmar((lista_insertar(lista, &b)) == 0, "Inserto 2º elemento en una lista.");
+    pa2m_afirmar(lista_elementos(lista) == 2, "La lista ahora deberia tener 2 elemento/s.");
+    pa2m_afirmar((lista_insertar(lista, &c)) == 0, "Inserto 3º elemento en una lista.");
+    pa2m_afirmar(lista_elementos(lista) == 3, "La lista ahora deberia tener 3 elemento/s.");
+
+    free(lista->nodo_fin);
+    free(lista->nodo_inicio->siguiente);
+    free(lista->nodo_inicio);
+    free(lista);
+}
 
 int main(){
 
@@ -304,6 +320,9 @@ int main(){
 
     printf("\n---------PROBAR_LISTA_ULTIMO---------\n");
     probar_lista_ultimo(); 
+
+    printf("\n---------PROBAR_LISTA_ELEMENTOS--------\n");
+    probar_lista_elementos(); 
 
     pa2m_mostrar_reporte();
     
