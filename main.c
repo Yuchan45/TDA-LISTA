@@ -171,7 +171,7 @@ void probar_lista_borrar(){
     pa2m_afirmar((lista->cantidad) == 3, "El contador de cantidad deberia ser de 3.");
     pa2m_afirmar((lista->nodo_inicio->elemento) == &a, "El nodo de inicio contiene al 1º elemento.");
     pa2m_afirmar((lista->nodo_fin->elemento) == &c, "El nodo de fin contiene al 3º elemento.\n");
-    //recorrer_y_mostrar(lista);
+
     pa2m_afirmar(lista_borrar(lista) == 0, "Puedo borrar el ultimo elemento de la lista.");
     pa2m_afirmar((lista->cantidad) == 2, "El contador de cantidad deberia ser de 2.");
     pa2m_afirmar((lista->nodo_fin->siguiente) == NULL, "El ultimo nodo queda apuntando a NULL.");
@@ -189,9 +189,9 @@ void probar_lista_borrar(){
     pa2m_afirmar((lista->nodo_inicio) == NULL, "El nodo de inicio es NULL.");
     pa2m_afirmar((lista->nodo_fin) == NULL, "El nodo de fin ahora es NULL.\n");
 
-    //free(lista->nodo_inicio);
+    pa2m_afirmar(lista_borrar(lista) != 0, "Deberia devolver error en caso de querer borrar un elemento en una lista vacia.");
+
     free(lista);
-    //recorrer_y_mostrar(lista);
 }
 
 void probar_lista_borrar_de_posicion(){
@@ -250,9 +250,36 @@ void probar_lista_borrar_de_posicion(){
     pa2m_afirmar((lista->nodo_inicio) == NULL, "El nodo de inicio es NULL.");
     pa2m_afirmar((lista->nodo_fin) == NULL, "El nodo de fin ahora es NULL.\n");
 
+    pa2m_afirmar(lista_borrar_de_posicion(lista, 300) != 0, "Deberia devolver error en caso de querer borrar un elemento en una lista vacia.");
+
     free(lista);
 
 }
+
+void probar_lista_ultimo(){
+    int dato_int = 15;
+    char dato_char = 'A';
+    double dato_double = 3.14;
+    lista_t* lista = lista_crear();
+
+    pa2m_afirmar(lista_ultimo(NULL) == NULL, "La funcion deberia devolver NULL si le paso una lista vacia o esta no tiene elementos.");
+
+    pa2m_afirmar((lista_insertar(lista, &dato_int)) == 0, "Inserte un valor (int) en la lista.");
+    pa2m_afirmar(*(int*)lista_ultimo(lista) == dato_int, "El ultimo valor deberia ser el (int) recientemente ingresado.");
+
+    pa2m_afirmar((lista_insertar(lista, &dato_char)) == 0, "Inserte un valor (char) en la lista.");
+    pa2m_afirmar(*(char*)lista_ultimo(lista) == dato_char, "El ultimo valor deberia ser el (char) recientemente ingresado.");
+
+    pa2m_afirmar((lista_insertar(lista, &dato_double)) == 0, "Inserte un valor (double) en la lista.");
+    pa2m_afirmar(*(double*)lista_ultimo(lista) == dato_double, "El ultimo valor deberia ser el (double) recientemente ingresado.");
+    
+
+    free(lista->nodo_fin);
+    free(lista->nodo_inicio->siguiente);
+    free(lista->nodo_inicio);
+    free(lista);
+} 
+
 
 int main(){
 
@@ -266,14 +293,17 @@ int main(){
     printf("\n---------PROBAR_LISTA_INSERTAR_EN_POSICION---------\n");
     probar_lista_insertar_en_posicion();
 
-    printf("\n---------PROBAR_LISTA_ES_VACIA---------\n");
-    probar_lista_es_vacia(); // 1º Implementar borrar.
-
     printf("\n---------PROBAR_LISTA_BORRAR---------\n");
     probar_lista_borrar();
 
     printf("\n---------PROBAR_LISTA_BORRAR_DE_POSICION---------\n");
     probar_lista_borrar_de_posicion();
+
+    printf("\n---------PROBAR_LISTA_ES_VACIA---------\n");
+    probar_lista_es_vacia(); 
+
+    printf("\n---------PROBAR_LISTA_ULTIMO---------\n");
+    probar_lista_ultimo(); 
 
     pa2m_mostrar_reporte();
     

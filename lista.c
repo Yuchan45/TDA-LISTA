@@ -120,7 +120,10 @@ int lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
 int lista_borrar(lista_t* lista){
     if (!lista)
         return -1;
-    
+
+    if (lista->cantidad == 0)
+        return -1;
+
     if (lista->cantidad == 1){
         free(lista->nodo_fin);
         lista->nodo_inicio = NULL;
@@ -157,6 +160,9 @@ int lista_borrar(lista_t* lista){
  */
 int lista_borrar_de_posicion(lista_t* lista, size_t posicion){
     if (!lista)
+        return -1;
+
+    if (lista->cantidad == 0)   
         return -1;
 
     if ( (posicion > 0) && (posicion < (lista->cantidad-1)) ){ // Si no es ni el ultimo nodo ni el primero.
@@ -200,7 +206,7 @@ int lista_borrar_de_posicion(lista_t* lista, size_t posicion){
  * encuentra vacía.
  */
 void* lista_ultimo(lista_t* lista){
-    if(!lista)
+    if(!lista || lista->cantidad == 0)
         return NULL;
     return lista->nodo_fin->elemento;
 }
