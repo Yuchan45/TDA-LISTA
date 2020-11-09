@@ -18,13 +18,16 @@ void recorrer_y_mostrar(lista_t* lista){
 
 }
 
-void liberar_nodos(lista_t* lista){
-    size_t numero_de_nodos= lista->cantidad;
 
-    for (int i = (int)numero_de_nodos - 1; i >= 0; i--){
-        printf("%i", i);
-    }
+void probar_lista_crear(){
+    lista_t* una_lista = NULL;
 
+    pa2m_afirmar((una_lista=lista_crear()) != NULL, "Puedo crear una lista.");
+    pa2m_afirmar((una_lista->nodo_inicio) == NULL, "Una lista se crea vacia. Con puntero de inicio = NULL.");
+    pa2m_afirmar((una_lista->nodo_fin) == NULL, "Una lista se crea vacia. Con puntero de fin = NULL.");
+    pa2m_afirmar((una_lista->cantidad) == 0, "Una lista se crea vacia. Con cantidad = 0.\n");
+
+    lista_destruir(una_lista);
 }
 
 void probar_lista_insertar(){
@@ -32,12 +35,7 @@ void probar_lista_insertar(){
     char dato_char = 'A';
     double dato_double = 20.1;
 
-    lista_t* una_lista = NULL;
-
-    pa2m_afirmar((una_lista=lista_crear()) != NULL, "Puedo crear una lista.");
-    pa2m_afirmar((una_lista->nodo_inicio) == NULL, "Una lista se crea vacia. Con puntero de inicio = NULL.");
-    pa2m_afirmar((una_lista->nodo_fin) == NULL, "Una lista se crea vacia. Con puntero de fin = NULL.");
-    pa2m_afirmar((una_lista->cantidad) == 0, "Una lista se crea vacia. Con cantidad = 0.\n");
+    lista_t* una_lista = lista_crear();
 
     pa2m_afirmar((lista_insertar(NULL, &dato_1)) != 0, "Insertar devuelve error si recibe una lista invalida (Lista = NULL).\n");
 
@@ -64,9 +62,6 @@ void probar_lista_insertar(){
     pa2m_afirmar((una_lista->nodo_inicio->elemento) == &dato_1, "El elemento del nodo de inicio sigue siendo el primer dato ingresado.");
     pa2m_afirmar((una_lista->nodo_fin->elemento) == &dato_double, "El elemento del nodo de fin ahora es el ultimo elemento ingresado.\n");
 
-    free(una_lista->nodo_fin);
-    free(una_lista->nodo_inicio->siguiente);
-    free(una_lista->nodo_inicio);
     lista_destruir(una_lista);
 
 }
@@ -129,11 +124,7 @@ void probar_lista_insertar_en_posicion(){
 
     //free(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente->siguiente);
 
-    free(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente);
-    free(lista->nodo_inicio->siguiente->siguiente->siguiente);
-    free(lista->nodo_inicio->siguiente->siguiente);
-    free(lista->nodo_inicio->siguiente);
-    free(lista->nodo_inicio);
+    
     lista_destruir(lista);
 
 }
@@ -300,10 +291,7 @@ void probar_lista_ultimo(){
     pa2m_afirmar(*(double*)lista_ultimo(lista) == dato_double, "El ultimo valor deberia ser el (double) recientemente ingresado.");
     
 
-    free(lista->nodo_fin);
-    free(lista->nodo_inicio->siguiente);
-    free(lista->nodo_inicio);
-    free(lista);
+    lista_destruir(lista);
 } 
 
 void probar_lista_elementos(){
@@ -317,10 +305,8 @@ void probar_lista_elementos(){
     pa2m_afirmar((lista_insertar(lista, &c)) == 0, "Inserto 3º elemento en una lista.");
     pa2m_afirmar(lista_elementos(lista) == 3, "La lista ahora deberia tener 3 elemento/s.");
 
-    free(lista->nodo_fin);
-    free(lista->nodo_inicio->siguiente);
-    free(lista->nodo_inicio);
-    free(lista);
+
+    lista_destruir(lista);
 }
 
 int main(){
@@ -328,6 +314,9 @@ int main(){
     /*       PRUEBAS       */
     
     pa2m_nuevo_grupo("PRUEBAS DE LISTA");
+
+    printf("\n---------PROBAR_LISTA_CREAR---------\n");
+    probar_lista_crear();
 
     printf("\n---------PROBAR_LISTA_INSERTAR---------\n");
     probar_lista_insertar();
@@ -359,26 +348,8 @@ int main(){
     /*        MAIN         */
     
     printf("\n-------------------------M.A.I.N--------------------------\n\n");
-    /*
-    int a = 5, b = 1, c = 3, d = 12;
-    lista_t* lista = lista_crear();
 
-    lista_insertar(lista, &a);
-    lista_insertar(lista, &b);
-    lista_insertar(lista, &c);
-    recorrer_y_mostrar(lista);
-    lista_borrar_de_posicion(lista, 1);
-    lista_borrar_de_posicion(lista, 1);
-    lista_borrar_de_posicion(lista, 0);
 
-    recorrer_y_mostrar(lista);
-
-    free(lista);
-    */
-    /* ANDA - FALTA TESTEAR
-    int cant = lista_elementos(lista);
-    printf("%i\n", cant);
-    */
 
 
 }

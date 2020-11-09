@@ -256,6 +256,17 @@ size_t lista_elementos(lista_t* lista){
     return lista->cantidad;
 }
 
+
+void liberar_nodos(nodo_t* nodo){
+    if (!nodo) 
+        return;
+    if(nodo->siguiente)
+        liberar_nodos(nodo->siguiente);
+        
+    free(nodo);
+}
+
 void lista_destruir(lista_t* lista){
+    liberar_nodos(lista->nodo_inicio);
     free(lista);
 }
