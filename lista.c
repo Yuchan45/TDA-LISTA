@@ -200,6 +200,34 @@ int lista_borrar_de_posicion(lista_t* lista, size_t posicion){
     return 0;
 }
 
+/*
+ * Devuelve el elemento en la posicion indicada, donde 0 es el primer
+ * elemento.
+ *
+ * Si no existe dicha posicion devuelve NULL.
+ */
+void* lista_elemento_en_posicion(lista_t* lista, size_t posicion){
+    if (!lista || posicion > lista->cantidad-1)
+        return NULL;
+
+    if (posicion == 0)
+        return lista->nodo_inicio->elemento; 
+
+    nodo_t* nodo_buscado;
+    nodo_t* nodo = lista->nodo_inicio;
+    size_t indice = 0;
+
+    while(nodo != NULL){
+        if ((indice + 1) == posicion){
+            nodo_buscado = nodo->siguiente->elemento;
+        }
+        (indice)++;
+        nodo = nodo->siguiente;
+    }
+
+    return nodo_buscado;
+}
+
 
 /* 
  * Devuelve el último elemento de la lista o NULL si la lista se

@@ -256,6 +256,32 @@ void probar_lista_borrar_de_posicion(){
 
 }
 
+void probar_lista_elemento_en_posicion(){
+    int dato_int = 15;
+    char dato_char = 'A';
+    double dato_double = 3.14;
+    lista_t* lista = lista_crear();
+
+    pa2m_afirmar((lista_elemento_en_posicion(NULL, 2)) == 0, "Buscar elemento en posicion deberia fallar si la lista es NULL.\n");
+
+    pa2m_afirmar((lista_insertar(lista, &dato_int)) == 0, "Inserte un valor (int) en la lista.");
+    pa2m_afirmar((lista_insertar(lista, &dato_char)) == 0, "Inserte un valor (char) en la lista.");
+    pa2m_afirmar((lista_insertar(lista, &dato_double)) == 0, "Inserte un valor (double) en la lista.\n");
+
+    //pa2m_afirmar((lista_elemento_en_posicion(lista, -1)) == NULL, "Deberia fallar si no existe dicha posicion. (posicion negativa)");
+    pa2m_afirmar((lista_elemento_en_posicion(lista, 10)) == NULL, "Deberia fallar si no existe dicha posicion. (posicion supera la cantidad de elementos en la lista).\n");
+
+    pa2m_afirmar(*(int*)lista_elemento_en_posicion(lista, 0) == dato_int, "Devuelve el elemento correcto.");
+    pa2m_afirmar(*(char*)lista_elemento_en_posicion(lista, 1) == dato_char, "Devuelve el elemento correcto.");
+    pa2m_afirmar(*(double*)lista_elemento_en_posicion(lista, 2) == dato_double, "Devuelve el elemento correcto.");
+
+    
+    free(lista->nodo_fin);
+    free(lista->nodo_inicio->siguiente);
+    free(lista->nodo_inicio);
+    free(lista);
+}
+
 void probar_lista_ultimo(){
     int dato_int = 15;
     char dato_char = 'A';
@@ -314,6 +340,9 @@ int main(){
 
     printf("\n---------PROBAR_LISTA_BORRAR_DE_POSICION---------\n");
     probar_lista_borrar_de_posicion();
+
+    printf("\n---------PROBAR_LISTA_ELEMENTO_EN_POSICION---------\n");
+    probar_lista_elemento_en_posicion();
 
     printf("\n---------PROBAR_LISTA_ES_VACIA---------\n");
     probar_lista_es_vacia(); 
