@@ -239,6 +239,16 @@ void* lista_ultimo(lista_t* lista){
     return lista->nodo_fin->elemento;
 }
 
+/*
+ * Devuelve el primer elemento de la cola o NULL en caso de estar
+ * vacía.
+ */
+void* lista_primero(lista_t* lista){
+    if(!lista || lista->cantidad == 0)
+        return NULL;
+    return lista->nodo_inicio->elemento;
+}
+
 /* 
  * Devuelve true si la lista está vacía o false en caso contrario.
  */
@@ -262,11 +272,43 @@ void liberar_nodos(nodo_t* nodo){
         return;
     if(nodo->siguiente)
         liberar_nodos(nodo->siguiente);
-        
+
     free(nodo);
 }
 
 void lista_destruir(lista_t* lista){
     liberar_nodos(lista->nodo_inicio);
     free(lista);
+}
+
+/*----------PILAS-----------*/
+
+/* 
+ * Apila un elemento.
+ * Devuelve 0 si pudo o -1 en caso contrario.
+ */
+int lista_apilar(lista_t* lista, void* elemento){
+    if (!lista)
+        return -1;
+
+    nodo_t* p_nodo = malloc(sizeof(nodo_t));
+    if (!p_nodo)
+        return -1;
+
+    if (lista->cantidad == 0){
+        lista->nodo_fin = p_nodo;
+        lista->nodo_inicio = p_nodo;
+    }else{
+        lista->nodo_inicio->siguiente = p_nodo;
+        lista->nodo_inicio = p_nodo;
+    }
+
+    lista->nodo_fin->elemento = elemento;
+    lista->nodo_fin->siguiente = NULL;
+    (lista->cantidad)++;
+
+    return 0;
+
+
+
 }

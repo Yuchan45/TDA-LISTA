@@ -273,6 +273,23 @@ void probar_lista_elemento_en_posicion(){
     free(lista);
 }
 
+void probar_lista_primero(){
+    int dato_int = 15;
+    char dato_char = 'A';
+    lista_t* lista = lista_crear();
+
+    pa2m_afirmar(lista_primero(NULL) == NULL, "La funcion deberia devolver NULL si le paso una lista vacia o esta no tiene elementos.\n");
+
+    pa2m_afirmar((lista_insertar(lista, &dato_int)) == 0, "Inserté un valor (int) en la lista.");
+    pa2m_afirmar(*(int*)lista_primero(lista) == dato_int, "El ultimo valor deberia ser el (int) recientemente ingresado.");
+
+    pa2m_afirmar((lista_insertar(lista, &dato_char)) == 0, "Inserté un valor (char) en la lista.");
+    pa2m_afirmar(*(char*)lista_primero(lista) == dato_int, "El primer valor deberia seguir siendo el valor anterior (int).");
+
+
+    lista_destruir(lista);
+}
+
 void probar_lista_ultimo(){
     int dato_int = 15;
     char dato_char = 'A';
@@ -309,6 +326,32 @@ void probar_lista_elementos(){
     lista_destruir(lista);
 }
 
+void probar_lista_apilar(){
+    int a = 5, b = 1, c = 3;
+    lista_t* lista = lista_crear();
+
+    pa2m_afirmar(lista_apilar(NULL, &a) == -1, "Deberia devolver error si le paso una lista vacia.\n");
+
+    printf(" - Apilo 2º elemento - \n");
+    pa2m_afirmar(lista_apilar(lista, &a) == 0, "Apilar 1º (char) en una lista.");
+    pa2m_afirmar(*(int*)lista->nodo_inicio->elemento == a, "Valor correcto - El elemento se apilo correctamente.");
+    pa2m_afirmar((lista->cantidad) == 1, "Ahora el contador de cantidad es 1.");
+    pa2m_afirmar((lista->nodo_inicio->elemento) == &a, "El elemento del nodo de inicio contiene al elemento ingresado.");
+    pa2m_afirmar((lista->nodo_fin->elemento) == &a, "El nodo de fin contiene al elemento ingresado.");
+    pa2m_afirmar(lista->nodo_inicio->elemento == lista->nodo_fin->elemento, "Como es la 1º insercion, el nodo fin y nodo inicio apuntan al mismo elemento.\n");
+    
+    printf(" - Apilo 2º elemento - \n");
+    pa2m_afirmar((lista_apilar(lista, &b)) == 0, "Apilar 2º (char) en una lista.");
+    pa2m_afirmar((*(int*)lista->nodo_fin->siguiente->elemento) == b, "Valor correcto - El elemento se apilo correctamente.");
+    pa2m_afirmar((lista->cantidad) == 2, "Ahora el contador de cantidad es 2.");
+    pa2m_afirmar((lista->nodo_fin->elemento) == &a, "El elemento del nodo de fin sigue siendo el primer dato ingresado.");
+    pa2m_afirmar((lista->nodo_inicio->elemento) == &b, "El elemento del nodo de inicio ahora es el ultimo elemento ingresado.");
+    pa2m_afirmar(lista->nodo_inicio->elemento != lista->nodo_fin->elemento, "Como es la 2º insercion, el nodo inicio y nodo fin apuntan a distintos elementos.\n");
+
+    lista_destruir(lista);
+}
+
+
 int main(){
 
     /*       PRUEBAS       */
@@ -336,11 +379,19 @@ int main(){
     printf("\n---------PROBAR_LISTA_ES_VACIA---------\n");
     probar_lista_es_vacia(); 
 
+    printf("\n---------PROBAR_LISTA_PRIMERO---------\n");
+    probar_lista_primero();
+
     printf("\n---------PROBAR_LISTA_ULTIMO---------\n");
     probar_lista_ultimo(); 
 
     printf("\n---------PROBAR_LISTA_ELEMENTOS--------\n");
     probar_lista_elementos(); 
+
+    pa2m_nuevo_grupo("PRUEBAS DE PILAS");
+
+    printf("\n---------PROBAR_LISTA_APILAR--------\n");
+    probar_lista_apilar(); 
 
     pa2m_mostrar_reporte();
     
