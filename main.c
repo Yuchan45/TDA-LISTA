@@ -325,7 +325,54 @@ void probar_lista_elementos(){
 
     lista_destruir(lista);
 }
+/*
+bool mostrar_elemento(void* elemento, void* contador){
+    if(elemento && contador)
+        printf("Elemento %i: %c \n", (*(int*)contador)++, *(char*)elemento);
+    return true;
+}
 
+void probar_operaciones_lista(){
+    lista_t* lista = lista_crear();
+    char a='a', b='b', c='c', d='d', w='w';
+  
+    lista_insertar(lista, &a);
+    lista_insertar(lista, &c);
+    lista_insertar_en_posicion(lista, &d, 100);
+    lista_insertar_en_posicion(lista, &b, 1);
+    lista_insertar_en_posicion(lista, &w, 3);
+  
+    lista_borrar_de_posicion(lista, 3);
+    
+    printf("Elementos en la lista: ");
+    for(size_t i=0; i<lista_elementos(lista); i++)
+        printf("%c ", *(char*)lista_elemento_en_posicion(lista, i));
+    
+    printf("\n\n");
+
+    printf("Imprimo la lista usando el iterador externo: \n");
+    lista_iterador_t* it = NULL;
+
+    for(it = lista_iterador_crear(lista);
+        lista_iterador_tiene_siguiente(it);
+        lista_iterador_avanzar(it))
+        printf("%c ", *(char*)lista_iterador_elemento_actual(it));
+    printf("\n\n");
+
+    lista_iterador_destruir(it);
+
+    int contador=0;
+    size_t elementos_recorridos = 0;
+    printf("Imprimo la lista usando el iterador interno: \n");
+    elementos_recorridos = lista_con_cada_elemento(lista, mostrar_elemento, (void*)&contador);
+
+    printf("Recorri %lu elementos con el iterador interno y sume %i elementos\n", elementos_recorridos, contador);
+    
+    printf("\n");
+    lista_destruir(lista);
+}*/
+
+/*
 void probar_lista_apilar(){
     int a = 5, b = 1, c = 3;
     lista_t* lista = lista_crear();
@@ -349,49 +396,190 @@ void probar_lista_apilar(){
     pa2m_afirmar(lista->nodo_inicio->elemento != lista->nodo_fin->elemento, "Como es la 2º insercion, el nodo inicio y nodo fin apuntan a distintos elementos.\n");
 
     lista_destruir(lista);
+}*/
+
+void probar_operaciones_pila(){
+    lista_t* pila = lista_crear();
+    char* algo="somtirogla";
+
+    for(int i=0; algo[i]!= 0; i++){
+        printf("Apilo %c\n", algo[i]);
+        lista_apilar(pila, &algo[i]);
+    }
+
+    printf("\nDesapilo y muestro los elementos apilados: ");
+    while(!lista_vacia(pila)){
+        printf("%c", *(char*)lista_tope(pila));
+        lista_desapilar(pila);
+    }
+    printf("\n");
+    lista_destruir(pila);
+}
+
+void probar_apilar(){
+    int a = 1, b = 2, c = 3;
+    lista_t* pila = lista_crear();
+
+    pa2m_afirmar((lista_apilar(NULL, &a)) == -1, "Devuelve error si le paso una lista NULL.\n");
+
+    pa2m_afirmar((lista_apilar(pila, &a)) == 0, "Puedo apilar el 1º elemento.");
+    pa2m_afirmar(pila->cantidad == 1, "La pila tiene 1 elemento.");  
+    pa2m_afirmar(lista_tope(pila) == &a, "El valor se apilo correctamente.\n");
+
+    pa2m_afirmar((lista_apilar(pila, &b)) == 0, "Puedo apilar el 1º elemento.");
+    pa2m_afirmar(pila->cantidad == 2, "La pila tiene 2 elementos.");  
+    pa2m_afirmar(lista_tope(pila) == &b, "El valor se apilo correctamente.\n");   
+
+    pa2m_afirmar((lista_apilar(pila, &c)) == 0, "Puedo apilar el 1º elemento.");
+    pa2m_afirmar(pila->cantidad == 3, "La pila tiene 3 elementos.");  
+    pa2m_afirmar(lista_tope(pila) == &c, "El valor se apilo correctamente."); 
+
+    lista_destruir(pila);
+}
+
+void probar_desapilar(){
+    int a = 1, b = 2;
+    lista_t* pila = lista_crear();
+
+    pa2m_afirmar((lista_desapilar(NULL)) == -1, "Devuelve error si intento desapilar en una pila NULL.\n");
+
+    lista_apilar(pila, &a);
+    lista_apilar(pila, &b);
+    
+    pa2m_afirmar(pila->cantidad == 2, "La pila tiene 2 elementos.");  
+    pa2m_afirmar((lista_desapilar(pila)) == 0, "Puedo desapilar el 2º elemento.");
+    pa2m_afirmar(*(int*)pila->nodo_inicio->elemento == a, "El elemento que queda en la pila es el 1º.");
+    pa2m_afirmar(pila->cantidad == 1, "La pila tiene 1 elemento."); 
+    pa2m_afirmar((lista_desapilar(pila)) == 0, "Puedo desapilar el 1º elemento.");
+    pa2m_afirmar(pila->cantidad == 0, "La pila tiene 0 elementos. Esta vacia."); 
+    pa2m_afirmar((lista_desapilar(pila)) == -1, "Desapilar en una pila vacia deberia fallar.");
+
+    lista_destruir(pila);
+}
+
+void probar_operaciones_cola(){
+    lista_t* cola = lista_crear();
+
+    int numeros[]={1,2,3,4,5,6};
+
+    for(size_t i=0; i<sizeof(numeros)/sizeof(int); i++){
+        printf("Encolo %i\n", numeros[i]);
+        lista_encolar(cola, &numeros[i]);
+    }
+  
+    printf("\nDesencolo los numeros y los muestro: ");
+    while(!lista_vacia(cola)){
+        printf("%i ", *(int*)lista_primero(cola));
+        lista_desencolar(cola);
+    }
+    printf("\n");
+    lista_destruir(cola);
+}
+
+void probar_encolar(){
+    int a = 1, b = 2, c = 3;
+    lista_t* cola = lista_crear();
+
+    pa2m_afirmar(lista_encolar(NULL, &a) == -1, "Encolar con una lista NULL deberia fallar (devuelve -1)."); 
+    pa2m_afirmar(lista_encolar(cola, &a) == 0, "Puedo encolar el 1º elemento."); 
+    pa2m_afirmar(cola->cantidad == 1, "La cola tiene 1 elemento/s."); 
+    pa2m_afirmar(lista_primero(cola) == &a, "El 1º elemento de la cola es correcto.\n"); 
+
+    pa2m_afirmar(lista_encolar(cola, &b) == 0, "Puedo encolar el 2º elemento."); 
+    pa2m_afirmar(cola->cantidad == 2, "La cola tiene 2 elemento/s."); 
+    pa2m_afirmar(lista_tope(cola) == &b, "El 2º elemento de la cola es correcto."); 
+
+    pa2m_afirmar(lista_encolar(cola, &c) == 0, "Puedo encolar el 3º elemento."); 
+    pa2m_afirmar(cola->cantidad == 3, "La cola tiene 3 elemento/s."); 
+    pa2m_afirmar(lista_primero(cola) == &a, "El 1º elemento de la cola es correcto. La cola esta ordenada.\n");
+    pa2m_afirmar(lista_tope(cola) == &c, "El 3º elemento de la cola es correcto."); 
+
+    lista_destruir(cola);
+}
+
+void probar_desencolar(){
+    int a = 1, b = 2;
+    lista_t* cola = lista_crear();
+
+    pa2m_afirmar(lista_desencolar(NULL) == -1, "Desncolar con una lista NULL deberia fallar (devuelve -1)."); 
+
+    lista_encolar(cola, &a);
+    lista_encolar(cola, &b);
+    pa2m_afirmar(cola->cantidad == 2, "La cola tiene 2 elemento/s.\n");
+
+    pa2m_afirmar(lista_desencolar(cola) == 0, "Puedo desencolar el 1º elemento."); 
+    pa2m_afirmar(*(int*)cola->nodo_inicio->elemento == b, "El elemento que sale es el 1º. En la cola queda el 2º elemento."); 
+    pa2m_afirmar(cola->cantidad == 1, "La cola tiene 1 elemento/s.\n");
+
+    pa2m_afirmar(lista_desencolar(cola) == 0, "Puedo desencolar el 2º elemento.");
+    pa2m_afirmar(cola->cantidad == 0, "La cola tiene 0 elemento/s."); 
+
+    pa2m_afirmar(lista_desencolar(cola) == -1, "Desencolar deberia fallar si la cola tiene 0 elementos."); 
+
+
+    lista_destruir(cola);
+
 }
 
 
 int main(){
 
     /*       PRUEBAS       */
-    
-    pa2m_nuevo_grupo("PRUEBAS DE LISTA");
 
-    printf("\n---------PROBAR_LISTA_CREAR---------\n");
+
+    pa2m_nuevo_grupo("PROBAR_LISTA_CREAR");
     probar_lista_crear();
 
-    printf("\n---------PROBAR_LISTA_INSERTAR---------\n");
+    pa2m_nuevo_grupo("PROBAR_LISTA_INSERTAR");
     probar_lista_insertar();
 
-    printf("\n---------PROBAR_LISTA_INSERTAR_EN_POSICION---------\n");
+    pa2m_nuevo_grupo("PROBAR_LISTA_INSERTAR_EN_POSICION");
     probar_lista_insertar_en_posicion();
 
-    printf("\n---------PROBAR_LISTA_BORRAR---------\n");
+    pa2m_nuevo_grupo("PROBAR_LISTA_BORRAR");
     probar_lista_borrar();
 
-    printf("\n---------PROBAR_LISTA_BORRAR_DE_POSICION---------\n");
+    pa2m_nuevo_grupo("PROBAR_LISTA_BORRAR_DE_POSICION");
     probar_lista_borrar_de_posicion();
 
-    printf("\n---------PROBAR_LISTA_ELEMENTO_EN_POSICION---------\n");
+    pa2m_nuevo_grupo("PROBAR_LISTA_ELEMENTO_EN_POSICION");
     probar_lista_elemento_en_posicion();
 
-    printf("\n---------PROBAR_LISTA_ES_VACIA---------\n");
+    pa2m_nuevo_grupo("PROBAR_LISTA_ES_VACIA");
     probar_lista_es_vacia(); 
 
-    printf("\n---------PROBAR_LISTA_PRIMERO---------\n");
+    pa2m_nuevo_grupo("PROBAR_LISTA_PRIMERO");
     probar_lista_primero();
 
-    printf("\n---------PROBAR_LISTA_ULTIMO---------\n");
+    pa2m_nuevo_grupo("PROBAR_LISTA_ULTIMO");
     probar_lista_ultimo(); 
 
-    printf("\n---------PROBAR_LISTA_ELEMENTOS--------\n");
+    pa2m_nuevo_grupo("PROBAR_LISTA_ELEMENTOS");
     probar_lista_elementos(); 
 
-    pa2m_nuevo_grupo("PRUEBAS DE PILAS");
+    //printf("\n---------PROBAR_OPERACIONES_LISTA--------\n");
+    //probar_operaciones_lista();
 
-    printf("\n---------PROBAR_LISTA_APILAR--------\n");
-    probar_lista_apilar(); 
+    pa2m_nuevo_grupo("PROBAR_OPERACIONES_DE_PILA");
+    probar_operaciones_pila(); 
+
+    pa2m_nuevo_grupo("PROBAR_APILAR");
+    probar_apilar();
+
+    pa2m_nuevo_grupo("PROBAR_DESAPILAR");
+    probar_desapilar();
+
+    pa2m_nuevo_grupo("PRUEBAS DE COLAS");
+
+    pa2m_nuevo_grupo("PROBAR_OPERACIONES_DE_COLA");
+    probar_operaciones_cola();
+
+    pa2m_nuevo_grupo("PROBAR_ENCOLAR");
+    probar_encolar();
+
+    pa2m_nuevo_grupo("PROBAR_DESENCOLAR");
+    probar_desencolar();
+
 
     pa2m_mostrar_reporte();
     
