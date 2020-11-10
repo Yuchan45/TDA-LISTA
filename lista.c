@@ -304,7 +304,9 @@ bool lista_iterador_tiene_siguiente(lista_iterador_t* iterador){
  * lista_iterador_elemento_actual, el resultado siempre será NULL.
  */
 bool lista_iterador_avanzar(lista_iterador_t* iterador){
-    if (!iterador || !(iterador->corriente))
+    if (!iterador)
+        return false;
+    if (!(iterador->corriente))
         return false;
     
     iterador->corriente = iterador->corriente->siguiente;
@@ -316,7 +318,11 @@ bool lista_iterador_avanzar(lista_iterador_t* iterador){
  * exista dicho elemento o en caso de error.
  */
 void* lista_iterador_elemento_actual(lista_iterador_t* iterador){
-
+    if (!iterador)
+        return NULL;
+    if (!(iterador->corriente))
+        return NULL;
+    return iterador->corriente->elemento;
 }
 
 /*
@@ -325,3 +331,24 @@ void* lista_iterador_elemento_actual(lista_iterador_t* iterador){
 void lista_iterador_destruir(lista_iterador_t* iterador){
     free(iterador);
 }
+
+/*
+ * Iterador interno. Recorre la lista e invoca la funcion con cada elemento de
+ * la misma. Dicha función puede devolver true si se deben seguir recorriendo
+ * elementos o false si se debe dejar de iterar elementos.
+ *
+ * La función retorna la cantidad de elementos iterados o 0 en caso de error.
+ */
+size_t lista_con_cada_elemento(lista_t* lista, bool (*funcion)(void*, void*), void *contexto){
+    if (!lista)
+        return 0;
+    size_t iteraciones = 0;
+    nodo_t* nodo_actual = lista->nodo_inicio;
+    while(nodo_actual && (*funcion)(nodo_actual->elemento, contexto)){
+        nodo_actual = nodo_actual->siguiente;
+        (iteraciones)++;
+    }
+    return iteraciones;
+}
+
+

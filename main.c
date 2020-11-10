@@ -325,7 +325,7 @@ void probar_lista_elementos(){
 
     lista_destruir(lista);
 }
-/*
+
 bool mostrar_elemento(void* elemento, void* contador){
     if(elemento && contador)
         printf("Elemento %i: %c \n", (*(int*)contador)++, *(char*)elemento);
@@ -360,7 +360,7 @@ void probar_operaciones_lista(){
     printf("\n\n");
 
     lista_iterador_destruir(it);
-
+    /*
     int contador=0;
     size_t elementos_recorridos = 0;
     printf("Imprimo la lista usando el iterador interno: \n");
@@ -368,35 +368,10 @@ void probar_operaciones_lista(){
 
     printf("Recorri %lu elementos con el iterador interno y sume %i elementos\n", elementos_recorridos, contador);
     
-    printf("\n");
+    printf("\n");*/
     lista_destruir(lista);
-}*/
+}
 
-/*
-void probar_lista_apilar(){
-    int a = 5, b = 1, c = 3;
-    lista_t* lista = lista_crear();
-
-    pa2m_afirmar(lista_apilar(NULL, &a) == -1, "Deberia devolver error si le paso una lista vacia.\n");
-
-    printf(" - Apilo 2º elemento - \n");
-    pa2m_afirmar(lista_apilar(lista, &a) == 0, "Apilar 1º (char) en una lista.");
-    pa2m_afirmar(*(int*)lista->nodo_inicio->elemento == a, "Valor correcto - El elemento se apilo correctamente.");
-    pa2m_afirmar((lista->cantidad) == 1, "Ahora el contador de cantidad es 1.");
-    pa2m_afirmar((lista->nodo_inicio->elemento) == &a, "El elemento del nodo de inicio contiene al elemento ingresado.");
-    pa2m_afirmar((lista->nodo_fin->elemento) == &a, "El nodo de fin contiene al elemento ingresado.");
-    pa2m_afirmar(lista->nodo_inicio->elemento == lista->nodo_fin->elemento, "Como es la 1º insercion, el nodo fin y nodo inicio apuntan al mismo elemento.\n");
-    
-    printf(" - Apilo 2º elemento - \n");
-    pa2m_afirmar((lista_apilar(lista, &b)) == 0, "Apilar 2º (char) en una lista.");
-    pa2m_afirmar((*(int*)lista->nodo_fin->siguiente->elemento) == b, "Valor correcto - El elemento se apilo correctamente.");
-    pa2m_afirmar((lista->cantidad) == 2, "Ahora el contador de cantidad es 2.");
-    pa2m_afirmar((lista->nodo_fin->elemento) == &a, "El elemento del nodo de fin sigue siendo el primer dato ingresado.");
-    pa2m_afirmar((lista->nodo_inicio->elemento) == &b, "El elemento del nodo de inicio ahora es el ultimo elemento ingresado.");
-    pa2m_afirmar(lista->nodo_inicio->elemento != lista->nodo_fin->elemento, "Como es la 2º insercion, el nodo inicio y nodo fin apuntan a distintos elementos.\n");
-
-    lista_destruir(lista);
-}*/
 
 void probar_operaciones_pila(){
     lista_t* pila = lista_crear();
@@ -521,6 +496,30 @@ void probar_desencolar(){
 
 }
 
+void probar_iterador(){
+    int a = 1, b = 2, c = 3;
+    lista_t* lista = lista_crear();
+    lista_iterador_t* iterador;
+    lista_insertar(lista, &a);
+    lista_insertar(lista, &b);
+    lista_insertar(lista, &c);
+
+    pa2m_afirmar((iterador = lista_iterador_crear(NULL)) == NULL, "Crear un iterador pasandole NULL por parametro deberia devolver NULL.");
+    pa2m_afirmar((iterador = lista_iterador_crear(lista)) != NULL, "Puedo crear un iterador pasandole una lista por parametro.");
+    pa2m_afirmar(iterador->lista == lista, "El puntero lista del iterador se inicia apuntando a la lista pasada por parametro.");
+    pa2m_afirmar(iterador->corriente == lista->nodo_inicio, "El puntero corriente se inicia apuntando al nodo_inicio de la lista pasada por parametro.\n");
+    printf("Recorro la lista usando el iterador externo\n");
+    while (lista_iterador_tiene_siguiente(iterador)){
+        printf("     -Elemento: %i\n", *(int*)(lista_iterador_elemento_actual(iterador)));
+        lista_iterador_avanzar(iterador);
+    }
+
+    pa2m_afirmar(iterador->corriente == NULL, "Iterador->corriente es NULL cuando ya recorrio toda la lista.");
+    pa2m_afirmar(!lista_iterador_tiene_siguiente(iterador), "El iterador ya no tiene siguiente elemento al cual iterar.")
+
+    lista_iterador_destruir(iterador);
+    lista_destruir(lista);
+}
 
 int main(){
 
@@ -557,8 +556,8 @@ int main(){
     pa2m_nuevo_grupo("PROBAR_LISTA_ELEMENTOS");
     probar_lista_elementos(); 
 
-    //printf("\n---------PROBAR_OPERACIONES_LISTA--------\n");
-    //probar_operaciones_lista();
+    pa2m_nuevo_grupo("PROBAR_OPERACIONES_LISTA");
+    probar_operaciones_lista();
 
     pa2m_nuevo_grupo("PROBAR_OPERACIONES_DE_PILA");
     probar_operaciones_pila(); 
@@ -579,6 +578,9 @@ int main(){
 
     pa2m_nuevo_grupo("PROBAR_DESENCOLAR");
     probar_desencolar();
+
+    pa2m_nuevo_grupo("PROBAR_ITERADOR");
+    probar_iterador();
 
 
     pa2m_mostrar_reporte();
