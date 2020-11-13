@@ -190,6 +190,8 @@ bool lista_vacia(lista_t* lista){
 }
 
 size_t lista_elementos(lista_t* lista){
+    if (!lista)
+        return 0;
     return lista->cantidad;
 }
 
@@ -236,8 +238,8 @@ int lista_desencolar(lista_t* lista){
 /*--------ITERADORES---------*/
 
 lista_iterador_t* lista_iterador_crear(lista_t* lista){
-    //if (!lista)
-    //    return NULL;
+    if (!lista)
+        return NULL;
     
     lista_iterador_t* iterador = malloc(sizeof(lista_iterador_t));
     if (!iterador)

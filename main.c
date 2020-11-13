@@ -254,7 +254,7 @@ void probar_lista_elemento_en_posicion(){
     double dato_double = 3.14;
     lista_t* lista = lista_crear();
 
-    pa2m_afirmar((lista_elemento_en_posicion(NULL, 2)) == 0, "Buscar elemento en posicion deberia fallar si la lista es NULL.\n");
+    pa2m_afirmar((lista_elemento_en_posicion(NULL, 2)) == 0, "Buscar elemento en posicion deberia fallar si paso por parametro NULL.\n");
 
     pa2m_afirmar((lista_insertar(lista, &dato_int)) == 0, "Inserte un valor (int) en la lista.");
     pa2m_afirmar((lista_insertar(lista, &dato_char)) == 0, "Inserte un valor (char) en la lista.");
@@ -268,10 +268,7 @@ void probar_lista_elemento_en_posicion(){
     pa2m_afirmar(*(double*)lista_elemento_en_posicion(lista, 2) == dato_double, "Devuelve el elemento correcto.");
 
     
-    free(lista->nodo_fin);
-    free(lista->nodo_inicio->siguiente);
-    free(lista->nodo_inicio);
-    free(lista);
+    lista_destruir(lista);
 }
 
 void probar_lista_primero(){
@@ -279,7 +276,8 @@ void probar_lista_primero(){
     char dato_char = 'A';
     lista_t* lista = lista_crear();
 
-    pa2m_afirmar(lista_primero(NULL) == NULL, "La funcion deberia devolver NULL si le paso una lista vacia o esta no tiene elementos.\n");
+    pa2m_afirmar(lista_primero(NULL) == NULL, "La funcion deberia devolver NULL si le paso NULL.");
+    pa2m_afirmar(lista_primero(lista) == NULL, "La funcion deberia devolver NULL si le paso una lista vacia o esta no tiene elementos.\n");
 
     pa2m_afirmar((lista_insertar(lista, &dato_int)) == 0, "Inserté un valor (int) en la lista.");
     pa2m_afirmar(*(int*)lista_primero(lista) == dato_int, "El ultimo valor deberia ser el (int) recientemente ingresado.");
@@ -297,7 +295,8 @@ void probar_lista_ultimo(){
     double dato_double = 3.14;
     lista_t* lista = lista_crear();
 
-    pa2m_afirmar(lista_ultimo(NULL) == NULL, "La funcion deberia devolver NULL si le paso una lista vacia o esta no tiene elementos.");
+    pa2m_afirmar(lista_ultimo(NULL) == NULL, "La funcion deberia devolver NULL si le paso NULL.");
+    pa2m_afirmar(lista_ultimo(lista) == NULL, "La funcion deberia devolver NULL si le paso una lista vacia o esta no tiene elementos.\n");
 
     pa2m_afirmar((lista_insertar(lista, &dato_int)) == 0, "Inserte un valor (int) en la lista.");
     pa2m_afirmar(*(int*)lista_ultimo(lista) == dato_int, "El ultimo valor deberia ser el (int) recientemente ingresado.");
@@ -315,6 +314,9 @@ void probar_lista_ultimo(){
 void probar_lista_elementos(){
     int a = 5, b = 1, c = 3;
     lista_t* lista = lista_crear();
+
+    pa2m_afirmar(lista_elementos(NULL) == 0, "La lista deberia tener 0 elemento/s si le paso NULL.");
+    pa2m_afirmar(lista_elementos(lista) == 0, "La lista deberia tener 0 elemento/s si le paso una lista vacia.\n");
 
     pa2m_afirmar((lista_insertar(lista, &a)) == 0, "Inserto 1º elemento en una lista.");
     pa2m_afirmar(lista_elementos(lista) == 1, "La lista ahora deberia tener 1 elemento/s.");
@@ -501,12 +503,14 @@ void probar_iterador_externo(){
     int a = 1, b = 2, c = 3;
     lista_t* lista = lista_crear();
     lista_iterador_t* iterador;
+    lista_iterador_t* it;
+    pa2m_afirmar((it = lista_iterador_crear(lista)) != NULL, "Puedo crear un iterador pasandole una lista vacia.");
     lista_insertar(lista, &a);
     lista_insertar(lista, &b);
     lista_insertar(lista, &c);
 
-    //pa2m_afirmar((iterador = lista_iterador_crear(NULL)) == NULL, "Crear un iterador pasandole NULL por parametro deberia devolver NULL.");
-    pa2m_afirmar((iterador = lista_iterador_crear(lista)) != NULL, "Puedo crear un iterador pasandole una lista por parametro.");
+    pa2m_afirmar((iterador = lista_iterador_crear(NULL)) == NULL, "No deberia poder crear un iterador pasandole NULL.");
+    pa2m_afirmar((iterador = lista_iterador_crear(lista)) != NULL, "Puedo crear un iterador pasandole una lista con elementos.");
     pa2m_afirmar(iterador->lista == lista, "El puntero lista del iterador se inicia apuntando a la lista pasada por parametro.");
     pa2m_afirmar(iterador->corriente == lista->nodo_inicio, "El puntero corriente se inicia apuntando al nodo_inicio de la lista pasada por parametro.\n");
     printf("Recorro la lista usando el iterador externo: \n");
@@ -518,6 +522,7 @@ void probar_iterador_externo(){
     pa2m_afirmar(iterador->corriente == NULL, "Iterador->corriente es NULL cuando ya recorrio toda la lista.");
     pa2m_afirmar(lista_iterador_tiene_siguiente(iterador) == false, "El iterador devuelve false, ya no tiene siguiente elemento al cual iterar.")
 
+    lista_iterador_destruir(it);
     lista_iterador_destruir(iterador);
     lista_destruir(lista);
 }
