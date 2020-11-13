@@ -16,10 +16,9 @@ lista_t* lista_crear(){
 
 int lista_insertar(lista_t* lista, void* elemento){
     if (!lista){
-        //printf("Lista es null.\n");
         return -1;
     }
-    //printf("elemento pasado: %i\n", *(int*)elemento);
+
     nodo_t* p_nodo = malloc(sizeof(nodo_t));
     if (!p_nodo)
         return -1;
@@ -97,7 +96,6 @@ int lista_borrar(lista_t* lista){
         free(lista->nodo_fin);
         while(nodo != NULL){
             if ((posicion + 1) == lista->cantidad){
-                //printf("Ante-ultimo elemento: %i, posicion: %li\n", *(int*)(nodo->elemento), posicion);
                 lista->nodo_fin = nodo;
                 lista->nodo_fin->siguiente = NULL;
                 return 0;
@@ -186,7 +184,6 @@ void* lista_primero(lista_t* lista){
 }
 
 bool lista_vacia(lista_t* lista){
-    // printf("%s", es_vacia ? "true" : "false");
     if(lista == NULL || lista->cantidad == 0)
         return true;
     return false;
@@ -238,17 +235,6 @@ int lista_desencolar(lista_t* lista){
 
 /*--------ITERADORES---------*/
 
-/*
- * Crea un iterador para una lista. El iterador creado es válido desde
- * el momento de su creación hasta que no haya mas elementos por
- * recorrer o se modifique la lista iterada (agregando o quitando
- * elementos de la lista). 
- *
- * Al momento de la creación, el iterador queda listo para devolver el
- * primer elemento utilizando lista_iterador_elemento_actual.
- *
- * Devuelve el puntero al iterador creado o NULL en caso de error.
- */
 lista_iterador_t* lista_iterador_crear(lista_t* lista){
     //if (!lista)
     //    return NULL;
@@ -262,24 +248,12 @@ lista_iterador_t* lista_iterador_crear(lista_t* lista){
 
 }
 
-/*
- * Devuelve true si hay mas elementos sobre los cuales iterar o false
- * si no hay mas.
- */
 bool lista_iterador_tiene_siguiente(lista_iterador_t* iterador){
     if (!iterador)
         return false;
     return iterador->corriente;
 }
 
-/*
- * Avanza el iterador al siguiente elemento.
- * Devuelve true si pudo avanzar el iterador o false en caso de
- * que no queden elementos o en caso de error.
- *
- * Una vez llegado al último elemento, si se invoca a
- * lista_iterador_elemento_actual, el resultado siempre será NULL.
- */
 bool lista_iterador_avanzar(lista_iterador_t* iterador){
     if (!iterador)
         return false;
@@ -290,10 +264,6 @@ bool lista_iterador_avanzar(lista_iterador_t* iterador){
     return iterador->corriente;
 }
 
-/*
- * Devuelve el elemento actual del iterador o NULL en caso de que no
- * exista dicho elemento o en caso de error.
- */
 void* lista_iterador_elemento_actual(lista_iterador_t* iterador){
     if (!iterador)
         return NULL;
@@ -302,22 +272,14 @@ void* lista_iterador_elemento_actual(lista_iterador_t* iterador){
     return iterador->corriente->elemento;
 }
 
-/*
- * Libera la memoria reservada por el iterador.
- */
 void lista_iterador_destruir(lista_iterador_t* iterador){
     free(iterador);
 }
 
-/*
- * Iterador interno. Recorre la lista e invoca la funcion con cada elemento de
- * la misma. Dicha función puede devolver true si se deben seguir recorriendo
- * elementos o false si se debe dejar de iterar elementos.
- *
- * La función retorna la cantidad de elementos iterados o 0 en caso de error.
- */
 size_t lista_con_cada_elemento(lista_t* lista, bool (*funcion)(void*, void*), void *contexto){
     if (!lista)
+        return 0;
+    if (!funcion)
         return 0;
     size_t elem_recorridos = 0;
     nodo_t* nodo_actual = lista->nodo_inicio;

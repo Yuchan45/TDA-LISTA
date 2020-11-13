@@ -1,5 +1,6 @@
-/*
+
 #include "lista.h"
+/*
 #include <stdio.h>
 
 bool mostrar_elemento(void* elemento, void* contador){

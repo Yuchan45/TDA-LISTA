@@ -132,24 +132,23 @@ void probar_lista_insertar_en_posicion(){
 }
 
 void probar_lista_es_vacia(){
-    //1 = true, 0 = false.
     int dato_1 = 12, dato_2 = 15;
     lista_t* lista = lista_crear();   
 
-    pa2m_afirmar(lista_vacia(NULL) == 1, "Si la lista es NULL, la lista esta vacia."); 
-    pa2m_afirmar(lista_vacia(lista) == 1, "La lista esta vacia.\n"); 
+    pa2m_afirmar(lista_vacia(NULL) == true, "Si la lista es NULL, la lista esta vacia."); 
+    pa2m_afirmar(lista_vacia(lista) == true, "La lista esta vacia.\n"); 
 
     pa2m_afirmar((lista_insertar(lista, &dato_1)) == 0, "Inserto 1º valor en una lista.");
-    pa2m_afirmar(lista_vacia(lista) != 1, "La lista no esta vacia.");
+    pa2m_afirmar(lista_vacia(lista) == false, "La lista no esta vacia.");
 
     pa2m_afirmar((lista_insertar(lista, &dato_2)) == 0, "Inserto 2º valor en una lista.");
-    pa2m_afirmar(lista_vacia(lista) != 1, "La lista no esta vacia.\n");
+    pa2m_afirmar(lista_vacia(lista) == false, "La lista no esta vacia.\n");
 
     pa2m_afirmar(lista_borrar(lista) == 0, "Borro el ultimo elemento de la lista.");
-    pa2m_afirmar(lista_vacia(lista) != 1, "La lista aun no esta vacia.");
+    pa2m_afirmar(lista_vacia(lista) == false, "La lista aun no esta vacia.");
 
     pa2m_afirmar(lista_borrar(lista) == 0, "Borro el ultimo elemento de la lista.");
-    pa2m_afirmar(lista_vacia(lista) == 1, "La lista esta vacia.");
+    pa2m_afirmar(lista_vacia(lista) == true, "La lista esta vacia.");
 
     lista_destruir(lista);
 }
@@ -362,7 +361,7 @@ void probar_operaciones_lista(){
     printf("\n\n");
 
     lista_iterador_destruir(it);
-    /*
+    
     int contador=0;
     size_t elementos_recorridos = 0;
     printf("Imprimo la lista usando el iterador interno: \n");
@@ -370,7 +369,7 @@ void probar_operaciones_lista(){
 
     printf("Recorri %lu elementos con el iterador interno y sume %i elementos\n", elementos_recorridos, contador);
     
-    printf("\n");*/
+    printf("\n");
     lista_destruir(lista);
 }
 
@@ -517,16 +516,16 @@ void probar_iterador_externo(){
     }
 
     pa2m_afirmar(iterador->corriente == NULL, "Iterador->corriente es NULL cuando ya recorrio toda la lista.");
-    pa2m_afirmar(!lista_iterador_tiene_siguiente(iterador), "El iterador ya no tiene siguiente elemento al cual iterar.")
+    pa2m_afirmar(lista_iterador_tiene_siguiente(iterador) == false, "El iterador devuelve false, ya no tiene siguiente elemento al cual iterar.")
 
     lista_iterador_destruir(iterador);
     lista_destruir(lista);
 }
 
-bool mostrar_dos_elementos(void* elemento, void* contador){
+bool mostrar_hasta_c(void* elemento, void* contador){
     if(elemento && contador)
         printf("    -Elemento %i: %c \n", (*(int*)contador)++, *(char*)elemento);
-    if (*(int*)contador == 2)
+    if (*(char*)elemento == 'c')
         return false;
     return true;
 }
@@ -534,20 +533,24 @@ bool mostrar_dos_elementos(void* elemento, void* contador){
 void probar_iterador_interno(){
     lista_t* lista = lista_crear();
     char a = 'a', b = 'b', c = 'c', d = 'd';
+    int aux = 1;
     lista_insertar(lista, &a);
     lista_insertar(lista, &b);
     lista_insertar(lista, &c);
     lista_insertar(lista, &d);
 
-    int aux = 0;
+    pa2m_afirmar(lista_con_cada_elemento(NULL, mostrar_elemento, (void*)&aux) == 0, "El iterador deberia devolver 0 si le paso una lista NULA.");
+    pa2m_afirmar(lista_con_cada_elemento(lista, NULL, (void*)&aux) == 0, "El iterador deberia devolver 0 si le paso un puntero a funcion NULO.\n");
+    //pa2m_afirmar(lista_con_cada_elemento(lista, mostrar_elemento, NULL == 0), "El iterador deberia devolver 0 si le paso un contexto (3º parametro) NULO.\n");
+    aux = 1;
     printf("Imprimo la lista de inicio a fin pasando la funcion mostrar_elemento().\n");
     size_t elem_recorridos = lista_con_cada_elemento(lista, mostrar_elemento, (void*)&aux);
-    pa2m_afirmar(elem_recorridos == 4, "El iterador recorrio toda la lista. Los 4 elementos.");
+    pa2m_afirmar(elem_recorridos == 4, "El iterador recorrio toda la lista. Los 4 elementos.\n");
 
-    printf("Imprimo la lista pasando la funcion mostrar_dos_elementos(). Va a mostrar los primeros dos elementos.\n");
-    size_t elem_recorridos_2 = lista_con_cada_elemento(lista, mostrar_dos_elementos, (void*)&aux);
-    pa2m_afirmar(elem_recorridos_2 == 2, "El iterador recorrio los primeros 2 elementos.");
-
+    aux = 1;
+    printf("Imprimo la lista pasando la funcion mostrar_hasta_c(). Va a mostrar los elementos hasta encontrar una c.\n");
+    elem_recorridos = lista_con_cada_elemento(lista, mostrar_hasta_c, (void*)&aux);
+    pa2m_afirmar(aux == 4, "El iterador recorrio la lista. Los 3 elementos hasta c.");
     lista_destruir(lista);
 }
 
@@ -556,7 +559,7 @@ int main(){
 
     /*       PRUEBAS       */
 
-
+/*          LISTAS           */
     pa2m_nuevo_grupo("PROBAR_LISTA_CREAR");
     probar_lista_crear();
 
@@ -590,26 +593,27 @@ int main(){
     pa2m_nuevo_grupo("PROBAR_OPERACIONES_LISTA");
     probar_operaciones_lista();
 
-    pa2m_nuevo_grupo("PROBAR_OPERACIONES_DE_PILA");
-    probar_operaciones_pila(); 
-
+/*          PILAS           */
     pa2m_nuevo_grupo("PROBAR_APILAR");
     probar_apilar();
 
     pa2m_nuevo_grupo("PROBAR_DESAPILAR");
     probar_desapilar();
 
-    pa2m_nuevo_grupo("PRUEBAS DE COLAS");
+    pa2m_nuevo_grupo("PROBAR_OPERACIONES_DE_PILA");
+    probar_operaciones_pila(); 
 
-    pa2m_nuevo_grupo("PROBAR_OPERACIONES_DE_COLA");
-    probar_operaciones_cola();
-
+/*          COLAS           */
     pa2m_nuevo_grupo("PROBAR_ENCOLAR");
     probar_encolar();
 
     pa2m_nuevo_grupo("PROBAR_DESENCOLAR");
     probar_desencolar();
 
+    pa2m_nuevo_grupo("PROBAR_OPERACIONES_DE_COLA");
+    probar_operaciones_cola();
+
+/*          ITERADORES           */
     pa2m_nuevo_grupo("PROBAR_ITERADOR_EXTERNO");
     probar_iterador_externo();
 
@@ -619,12 +623,4 @@ int main(){
 
     pa2m_mostrar_reporte();
     
-
-    /*        MAIN         */
-    
-    printf("\n-------------------------M.A.I.N--------------------------\n\n");
-
-
-
-
 }
