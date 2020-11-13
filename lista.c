@@ -39,64 +39,43 @@ int lista_insertar(lista_t* lista, void* elemento){
     return 0;
 }
 
+
 int lista_insertar_en_posicion(lista_t* lista, void* elemento, size_t posicion){
     if (!lista){
         return -1;
     }
+    if (posicion >= lista->cantidad || lista->cantidad == 0) //Si la posicion es la ultima o mayor, o si la lista esta vacia. Hay que insertar al final.
+        return lista_insertar(lista, elemento);
+
     nodo_t* nodo_nuevo = malloc(sizeof(nodo_t));
     if (!nodo_nuevo)
         return -1;
+
     nodo_nuevo->elemento = elemento;
     nodo_nuevo->siguiente = NULL;
 
-
-    if (posicion <= lista->cantidad){
+    if (posicion == 0){
+        nodo_nuevo->siguiente = lista->nodo_inicio;
+        lista->nodo_inicio = nodo_nuevo;
+        (lista->cantidad)++;
+        return 0;
+    }else{
         size_t indice = 0;
         nodo_t* nodo = lista->nodo_inicio;
 
-        if(posicion == 0){ // Caso el nodo a agregar es en la primer posicion.
-            nodo_nuevo->siguiente = lista->nodo_inicio;
-            lista->nodo_inicio = nodo_nuevo;
-            if (lista->cantidad == 0) // Si la lista esta vacia (cantidad = 0) y el usuario te pasa la posicion 0.
-                lista->nodo_fin = nodo_nuevo;
-            (lista->cantidad)++;
-            return 0;
-        }
-        
-        if(posicion == lista->cantidad){ // Caso nodo a agregar es en la ultima posicion.
-            lista->nodo_fin->siguiente = nodo_nuevo;
-            lista->nodo_fin = nodo_nuevo;
-            (lista->cantidad)++;
-            return 0;
-        }
-        
         while(nodo != NULL){ // Caso que el nodo a agregar es uno de los del medio.
             if ((indice + 1) == posicion){
                 nodo_nuevo->siguiente = nodo->siguiente;
                 nodo->siguiente = nodo_nuevo;
                 (lista->cantidad)++;
             }
-            //printf("Puntero a elemento: %p, elemento: %c, indice: %li\n", nodo->elemento, *(char*)(nodo->elemento), indice);
             (indice)++;
             nodo = nodo->siguiente;
         }
-
-    }else{ // Si son posiciones invalidas (negativas o exceden las posiciones ya ubicadas.)
-
-        if (lista->cantidad == 0){ // Si la lista esta vacia.
-            lista->nodo_inicio = nodo_nuevo;
-            lista->nodo_fin = nodo_nuevo;
-            (lista->cantidad)++;
-        }else{ // Si la lista ya tiene elementos.
-            lista->nodo_fin->siguiente = nodo_nuevo; // Primero, antes de cambiar el puntero final, hago que el elemento del puntero final (osea el anterior) apunte al nuevo.
-            lista->nodo_fin = nodo_nuevo; // Ahora si actualizo el puntero final.
-            lista->nodo_fin->siguiente = NULL;
-            (lista->cantidad)++;
-        }
+        return 0;
     }
-
-    return 0;
 }
+
 
 int lista_borrar(lista_t* lista){
     if (!lista)
@@ -145,7 +124,6 @@ int lista_borrar_de_posicion(lista_t* lista, size_t posicion){
 
         while(nodo != NULL){
             if ((indice + 1) == posicion){
-                //printf("Ante-ultimo elemento: %i, posicion: %li\n", *(int*)(nodo->elemento), posicion);
                 nodo_auxiliar = nodo->siguiente;
                 nodo->siguiente = nodo_auxiliar->siguiente;
                 free(nodo_auxiliar);
@@ -157,19 +135,18 @@ int lista_borrar_de_posicion(lista_t* lista, size_t posicion){
         }
     }else{
         // Si la posicion es 0 o la ultima. Hay que reasignar punteros de la lista.
-        if (posicion == 0 && (lista->cantidad > 1)){ // Si la lista tuviese 1 elemento solo, directamente habria que borrar el ultimo elemento.
-            //printf("entro aca\n");
+        if (posicion == 0 && (lista->cantidad > 1)){ // Aca entra si la posicion a borrar es la 0 y hay 2 o mas elementos.
             nodo_t* nodo_auxiliar;
             (lista->cantidad)--;
             nodo_auxiliar = lista->nodo_inicio;
             lista->nodo_inicio = lista->nodo_inicio->siguiente;
             free(nodo_auxiliar);
 
-        }else{ // Aca deberia entrar si tiene mas de 1 elemento.
-            lista_borrar(lista);
+        }else{ // Aca entra si hay que borrar la ultima posicion.
+            return lista_borrar(lista);
         }
     }
-    //printf("paso por aca\n\n\n");
+
     return 0;
 }
 
@@ -273,8 +250,8 @@ int lista_desencolar(lista_t* lista){
  * Devuelve el puntero al iterador creado o NULL en caso de error.
  */
 lista_iterador_t* lista_iterador_crear(lista_t* lista){
-    if (!lista)
-        return NULL;
+    //if (!lista)
+    //    return NULL;
     
     lista_iterador_t* iterador = malloc(sizeof(lista_iterador_t));
     if (!iterador)
@@ -342,13 +319,13 @@ void lista_iterador_destruir(lista_iterador_t* iterador){
 size_t lista_con_cada_elemento(lista_t* lista, bool (*funcion)(void*, void*), void *contexto){
     if (!lista)
         return 0;
-    size_t iteraciones = 0;
+    size_t elem_recorridos = 0;
     nodo_t* nodo_actual = lista->nodo_inicio;
     while(nodo_actual && (*funcion)(nodo_actual->elemento, contexto)){
         nodo_actual = nodo_actual->siguiente;
-        (iteraciones)++;
+        (elem_recorridos)++;
     }
-    return iteraciones;
+    return elem_recorridos;
 }
 
 

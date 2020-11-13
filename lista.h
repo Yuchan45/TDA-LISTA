@@ -170,3 +170,5 @@ void lista_iterador_destruir(lista_iterador_t* iterador);
 size_t lista_con_cada_elemento(lista_t* lista, bool (*funcion)(void*, void*), void *contexto);
 
 #endif /* __LISTA_H__ */
+
+
