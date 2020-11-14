@@ -150,25 +150,17 @@ int lista_borrar_de_posicion(lista_t* lista, size_t posicion){
 
 
 void* lista_elemento_en_posicion(lista_t* lista, size_t posicion){
-    if (!lista || posicion > lista->cantidad-1)
+    if (!lista)
         return NULL;
 
-    if (posicion == 0)
-        return lista->nodo_inicio->elemento; 
+    if (lista->cantidad == 0 || posicion > lista->cantidad-1)
+        return NULL;
 
-    nodo_t* nodo_buscado;
-    nodo_t* nodo = lista->nodo_inicio;
-    size_t indice = 0;
-
-    while(nodo != NULL){
-        if ((indice + 1) == posicion){
-            nodo_buscado = nodo->siguiente->elemento;
-        }
-        (indice)++;
-        nodo = nodo->siguiente;
+    nodo_t* nodo_buscado = lista->nodo_inicio;    
+    for (int i = 0; i < posicion; i++){
+        nodo_buscado = nodo_buscado->siguiente;
     }
-
-    return nodo_buscado;
+    return nodo_buscado->elemento;
 }
 
 void* lista_ultimo(lista_t* lista){
