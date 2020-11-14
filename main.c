@@ -628,4 +628,14 @@ int main(){
 
     pa2m_mostrar_reporte();
     
+/*   MAIN   */
+/*
+    int a = 1, b = 2, c = 3;
+
+    lista_t* lista = lista_crear();
+    lista_insertar(lista, &a);
+    lista_insertar(lista, &b);
+    lista_insertar(lista, &c);
+    //lista_destruir_2(lista);
+*/
 }
