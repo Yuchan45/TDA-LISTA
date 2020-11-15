@@ -3,7 +3,7 @@
 #include "pa2mm.h"
 
 /*
-Recibe una lista por parametro y la recorre, devolviendo el puntero de cada posicion.
+    Recibe una lista por parametro y la recorre, devolviendo el puntero de cada posicion.
  */
 void recorrer_y_mostrar(lista_t* lista){
     nodo_t* sig;
@@ -17,7 +17,6 @@ void recorrer_y_mostrar(lista_t* lista){
     }
 
 }
-
 
 void probar_lista_crear(){
     lista_t* una_lista = NULL;
@@ -70,16 +69,16 @@ void probar_lista_insertar_en_posicion(){
     int dato_1 = 12, dato_2 = 15;
     char dato_char = 'A', dato_char_2 = 'Z';
     double dato_double = 20.1;
-    //double dato_double_2 = 2.3;
 
     lista_t* lista = lista_crear();
 
-    pa2m_afirmar(lista_insertar_en_posicion(NULL, &dato_1, 3) != 0, "La funcion devuelve error si recibe una lista invalida (Lista = NULL).\n");
+    pa2m_afirmar(lista_insertar_en_posicion(NULL, &dato_1, 3) != 0, "La funcion devuelve error si recibe una lista invalida (Lista = NULL).");
+    //pa2m_afirmar(lista_insertar_en_posicion(lista, &dato_1, NULL) != 0, "No deberia poder insertar en una lista pasando posicion NULL.\n"); La posicion es un size_t...
     
-    // Insertar en posicion NULL.
+
     
     printf(" - Inserto 1º elemento - \n");
-    pa2m_afirmar(lista_insertar_en_posicion(lista, &dato_1, 0) == 0, "Puedo insertar un valor (int) por posicion en una lista vacia."); //Funciona con pos = 0 o 1.
+    pa2m_afirmar(lista_insertar_en_posicion(lista, &dato_1, 1) == 0, "Puedo insertar un valor (int) por posicion inexistente en una lista vacia."); //Funciona con pos = 0 o 1.
     pa2m_afirmar((*(int*)lista->nodo_inicio->elemento) == dato_1, "Valor correcto - El elemento se inserto correctamente.");
     pa2m_afirmar((lista->cantidad) == 1, "Ahora el contador de cantidad es 1.");
     pa2m_afirmar((lista->nodo_inicio->elemento) == &dato_1, "El nodo de inicio ahora contiene al dato ingresado.");
@@ -123,8 +122,6 @@ void probar_lista_insertar_en_posicion(){
     pa2m_afirmar((lista->nodo_inicio->elemento) == &dato_char, "El nodo de inicio no cambia, sigue apuntando al de antes.");
     pa2m_afirmar((lista->nodo_fin->elemento) == &dato_char_2, "El nodo de fin ahora apunta a este nuevo nodo.\n");
     */
-
-    //free(lista->nodo_inicio->siguiente->siguiente->siguiente->siguiente->siguiente);
 
     
     lista_destruir(lista);
@@ -527,6 +524,9 @@ void probar_iterador_externo(){
     lista_destruir(lista);
 }
 
+/*
+    Funcion que muestra por pantalla el elemento char de la lista. Retorna false en caso de encontrar un elemento char 'c'.
+ */
 bool mostrar_hasta_c(void* elemento, void* contador){
     if(elemento && contador)
         printf("    -Elemento %i: %c \n", (*(int*)contador)++, *(char*)elemento);
@@ -546,7 +546,6 @@ void probar_iterador_interno(){
 
     pa2m_afirmar(lista_con_cada_elemento(NULL, mostrar_elemento, (void*)&aux) == 0, "El iterador deberia devolver 0 si le paso una lista NULA.");
     pa2m_afirmar(lista_con_cada_elemento(lista, NULL, (void*)&aux) == 0, "El iterador deberia devolver 0 si le paso un puntero a funcion NULO.\n");
-    //pa2m_afirmar(lista_con_cada_elemento(lista, mostrar_elemento, NULL == 0), "El iterador deberia devolver 0 si le paso un contexto (3º parametro) NULO.\n");
     aux = 1;
     printf("Imprimo la lista de inicio a fin pasando la funcion mostrar_elemento().\n");
     size_t elem_recorridos = lista_con_cada_elemento(lista, mostrar_elemento, (void*)&aux);
@@ -628,14 +627,4 @@ int main(){
 
     pa2m_mostrar_reporte();
     
-/*   MAIN   */
-/*
-    int a = 1, b = 2, c = 3;
-
-    lista_t* lista = lista_crear();
-    lista_insertar(lista, &a);
-    lista_insertar(lista, &b);
-    lista_insertar(lista, &c);
-    //lista_destruir_2(lista);
-*/
 }

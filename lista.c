@@ -187,28 +187,13 @@ size_t lista_elementos(lista_t* lista){
     return lista->cantidad;
 }
 
-/*
-void liberar_nodos(nodo_t* nodo){
-    if (!nodo) 
+void lista_destruir(lista_t* lista){
+    if (!lista)
         return;
-    if(nodo->siguiente)
-        liberar_nodos(nodo->siguiente);
-
-    free(nodo);
-}
-
-void lista_destruir(lista_t* lista){
-    liberar_nodos(lista->nodo_inicio);
-    free(lista);
-}*/
-
-void lista_destruir(lista_t* lista){
-    // Hay que recorrer la lista y guardar el puntero del elemento a borrar en un aux asi no perdes el sigueinte.
-    //nodo_t* nodo_auxiliar;
+        
     nodo_t* nodo_actual = lista->nodo_inicio;
     while(nodo_actual){
         nodo_t* nodo_auxiliar = nodo_actual->siguiente;
-        //printf("%i\n", *(int*)nodo_actual->elemento);
         free(nodo_actual);
         nodo_actual = nodo_auxiliar;
     }
